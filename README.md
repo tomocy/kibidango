@@ -4,5 +4,5 @@ linux container from scratch
 
 ### Environment
 ```
-docker run --rm -it -v $(pwd):/app -w /app alpine
+docker run --rm -it -v $(pwd):/app -w /app --privileged golang:alpine
 ```
