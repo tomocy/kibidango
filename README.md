@@ -1,6 +1,6 @@
 # kibidango
 
-linux container from scratch
+Container from scratch
 
 ### Environment
 ```
