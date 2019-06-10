@@ -22,12 +22,12 @@ func (c *LinuxContainer) Run(conf *config.Config) error {
 }
 
 func (c *LinuxContainer) launch() error {
-	cmd := buildCloneCommand("/proc/self/exe", "-load")
+	cmd := buildCloneCommand("-load")
 	return cmd.Run()
 }
 
-func buildCloneCommand(name string, args ...string) *exec.Cmd {
-	cmd := exec.Command(name, args...)
+func buildCloneCommand(args ...string) *exec.Cmd {
+	cmd := exec.Command("/proc/self/exe", args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET | syscall.CLONE_NEWNS |
 			syscall.CLONE_NEWPID | syscall.CLONE_NEWUSER | syscall.CLONE_NEWUTS,
