@@ -10,19 +10,21 @@ import (
 
 func main() {
 	config := parseConfig()
+	if err := run(config); err != nil {
+		fmt.Printf("failed to run: %s", err)
+		os.Exit(1)
+	}
+}
+
+func run(config *config) error {
 	switch config.command {
 	case cmdClone:
-		if err := clone("-init"); err != nil {
-			fmt.Printf("failed to clone: %s\n", err)
-			os.Exit(1)
-		}
+		return clone("-init")
 	case cmdInit:
-		if err := initAndExec("/bin/sh"); err != nil {
-			fmt.Printf("failed to init and exec: %s\n", err)
-			os.Exit(1)
-		}
+		return initAndExec("/bin/sh")
 	default:
 		showUsage()
+		return nil
 	}
 }
 
