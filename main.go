@@ -29,10 +29,10 @@ func run(config *config) error {
 }
 
 func parseConfig() *config {
-	isSetUp := flag.Bool("init", false, "init self as container")
+	isInit := flag.Bool("init", false, "init self as container")
 	flag.Parse()
 	cmd := cmdClone
-	if *isSetUp {
+	if *isInit {
 		cmd = cmdInit
 	}
 
