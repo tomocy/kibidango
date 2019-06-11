@@ -69,13 +69,13 @@ func (c *Linux) load(name string) error {
 }
 
 func (c *Linux) prepare() error {
-	if err := os.MkdirAll(c.joinRoot("/proc"), 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/proc"), 0755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/bin"), 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/lib"), 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/lib"), 0755); err != nil {
 		return err
 	}
 	if err := c.enableAll([]string{
