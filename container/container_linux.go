@@ -10,11 +10,11 @@ import (
 	"github.com/tomocy/kibidango/config"
 )
 
-type LinuxContainer struct {
+type Linux struct {
 	Root string
 }
 
-func (c *LinuxContainer) Run(conf *config.Config) error {
+func (c *Linux) Run(conf *config.Config) error {
 	switch conf.Command {
 	case config.CommandLaunch:
 		return c.launch()
@@ -25,7 +25,7 @@ func (c *LinuxContainer) Run(conf *config.Config) error {
 	}
 }
 
-func (c *LinuxContainer) launch() error {
+func (c *Linux) launch() error {
 	cmd := buildCloneCommand("-load")
 	return cmd.Run()
 }
@@ -55,7 +55,7 @@ func buildCloneCommand(args ...string) *exec.Cmd {
 	return cmd
 }
 
-func (c *LinuxContainer) load(name string) error {
+func (c *Linux) load(name string) error {
 	if err := c.prepare(); err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (c *LinuxContainer) load(name string) error {
 	return syscall.Exec(name, []string{name}, os.Environ())
 }
 
-func (c *LinuxContainer) prepare() error {
+func (c *Linux) prepare() error {
 	if err := os.MkdirAll(c.joinRoot("/proc"), 0777); err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (c *LinuxContainer) prepare() error {
 	return nil
 }
 
-func (c *LinuxContainer) enableAll(names []string, deps ...string) error {
+func (c *Linux) enableAll(names []string, deps ...string) error {
 	for _, dep := range deps {
 		if err := copyFile(dep, c.joinRoot(dep)); err != nil {
 			return err
@@ -121,7 +121,7 @@ func copyFile(src, dest string) error {
 	return nil
 }
 
-func (c *LinuxContainer) init() error {
+func (c *Linux) init() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
@@ -140,6 +140,6 @@ func (c *LinuxContainer) init() error {
 	return nil
 }
 
-func (c *LinuxContainer) joinRoot(path string) string {
+func (c *Linux) joinRoot(path string) string {
 	return filepath.Join(c.Root, path)
 }

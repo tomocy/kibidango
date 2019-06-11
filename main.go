@@ -10,7 +10,7 @@ import (
 
 func main() {
 	conf := config.Parse()
-	cont := &container.LinuxContainer{
+	cont := &container.Linux{
 		Root: "/root/container",
 	}
 	if err := cont.Run(conf); err != nil {
