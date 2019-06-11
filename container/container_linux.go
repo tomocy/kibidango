@@ -147,9 +147,8 @@ func (c *Linux) mountProcs() error {
 	if err := os.MkdirAll(c.joinRoot("/proc"), 0755); err != nil {
 		return err
 	}
-	if err := syscall.Mount("/proc", c.joinRoot("/proc"), "proc", uintptr(
-		syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV,
-	), ""); err != nil {
+	if err := syscall.Mount(
+		"/proc", c.joinRoot("/proc"), "proc", syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV, ""); err != nil {
 		return err
 	}
 
