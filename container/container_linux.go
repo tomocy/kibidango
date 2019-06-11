@@ -19,17 +19,17 @@ type Linux struct {
 func (c *Linux) Run(conf *config.Config) error {
 	switch conf.Phase {
 	case config.PhaseLaunch:
-		return c.launch()
+		return c.launch(conf.Command)
 	case config.PhaseBoot:
-		return c.boot("/bin/sh")
+		return c.boot(conf.Command)
 	default:
 		return nil
 	}
 }
 
-func (c *Linux) launch() error {
-	cmd := c.buildCloneCommand("-boot")
-	return cmd.Run()
+func (c *Linux) launch(cmd string) error {
+	cloneCmd := c.buildCloneCommand("-boot", "-command="+cmd)
+	return cloneCmd.Run()
 }
 
 func (c *Linux) buildCloneCommand(args ...string) *exec.Cmd {
