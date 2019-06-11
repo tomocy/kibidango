@@ -75,9 +75,6 @@ func (c *Linux) prepare() error {
 	if err := os.MkdirAll(c.joinRoot("/lib"), 0755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/oldfs"), 0755); err != nil {
-		return err
-	}
 	if err := c.enableAll([]string{
 		"/bin/sh", "/bin/ls", "/bin/ps",
 	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
