@@ -78,6 +78,9 @@ func (c *Linux) prepare() error {
 	if err := os.MkdirAll(c.joinRoot("/lib"), 0755); err != nil {
 		return err
 	}
+	if err := os.MkdirAll(c.joinRoot("/oldfs"), 0755); err != nil {
+		return err
+	}
 	if err := c.enableAll([]string{
 		"/bin/sh", "/bin/ls",
 	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
@@ -141,10 +144,19 @@ func (c *Linux) init() error {
 	), ""); err != nil {
 		return err
 	}
-	if err := syscall.Chroot(c.Root); err != nil {
+	if err := syscall.Mount(c.Root, c.Root, "", syscall.MS_BIND, ""); err != nil {
+		return err
+	}
+	if err := syscall.PivotRoot(c.Root, c.joinRoot("/oldfs")); err != nil {
 		return err
 	}
 	if err := syscall.Chdir("/"); err != nil {
+		return err
+	}
+	if err := syscall.Unmount("/oldfs", syscall.MNT_DETACH); err != nil {
+		return err
+	}
+	if err := os.RemoveAll("/oldfs"); err != nil {
 		return err
 	}
 
