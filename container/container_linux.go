@@ -74,10 +74,7 @@ func (c *Linux) prepare() error {
 	}); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
-		return err
-	}
-	if err := c.enableAll([]string{
+	if err := c.enable([]string{
 		"/bin/sh", "/bin/ls", "/bin/ps",
 	}); err != nil {
 		return err
@@ -100,29 +97,18 @@ func (c *Linux) ensure(libs []string) error {
 	return nil
 }
 
-func (c *Linux) enableAll(names []string, deps ...string) error {
-	for i, name := range names {
-		var onces []string
-		if i == 0 {
-			onces = deps
-		}
+func (c *Linux) enable(bins []string) error {
+	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
+		return err
+	}
 
-		if err := c.enable(name, onces...); err != nil {
+	for _, bin := range bins {
+		if err := copyFile(bin, c.joinRoot(bin)); err != nil {
 			return err
 		}
 	}
 
 	return nil
-}
-
-func (c *Linux) enable(name string, deps ...string) error {
-	for _, dep := range deps {
-		if err := copyFile(dep, c.joinRoot(dep)); err != nil {
-			return err
-		}
-	}
-
-	return copyFile(name, c.joinRoot(name))
 }
 
 func copyFile(src, dest string) error {
