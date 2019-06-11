@@ -58,9 +58,6 @@ func (c *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 }
 
 func (c *Linux) load(name string) error {
-	if err := c.prepare(); err != nil {
-		return err
-	}
 	if err := c.init(); err != nil {
 		return err
 	}
@@ -68,16 +65,40 @@ func (c *Linux) load(name string) error {
 	return syscall.Exec(name, []string{name}, os.Environ())
 }
 
-func (c *Linux) prepare() error {
-	if err := c.ensure([]string{
-		"/lib/ld-musl-x86_64.so.1",
-	}); err != nil {
+func (c *Linux) init() error {
+	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
 	if err := c.enable([]string{
 		"/bin/sh", "/bin/ls", "/bin/ps",
-	}); err != nil {
+	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
 		return err
+	}
+	if err := c.mountProcs(); err != nil {
+		return err
+	}
+	if err := c.pivotRoot(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Linux) enable(bins []string, libs ...string) error {
+	if 1 <= len(libs) {
+		if err := c.ensure(libs); err != nil {
+			return err
+		}
+	}
+
+	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
+		return err
+	}
+
+	for _, bin := range bins {
+		if err := copyFile(bin, c.joinRoot(bin)); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -90,20 +111,6 @@ func (c *Linux) ensure(libs []string) error {
 
 	for _, lib := range libs {
 		if err := copyFile(lib, c.joinRoot(lib)); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (c *Linux) enable(bins []string) error {
-	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
-		return err
-	}
-
-	for _, bin := range bins {
-		if err := copyFile(bin, c.joinRoot(bin)); err != nil {
 			return err
 		}
 	}
@@ -125,20 +132,6 @@ func copyFile(src, dest string) error {
 	defer output.Close()
 
 	if _, err := io.Copy(output, input); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (c *Linux) init() error {
-	if err := syscall.Sethostname([]byte("container")); err != nil {
-		return err
-	}
-	if err := c.mountProcs(); err != nil {
-		return err
-	}
-	if err := c.pivotRoot(); err != nil {
 		return err
 	}
 
