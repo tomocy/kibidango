@@ -11,6 +11,11 @@ import (
 	"github.com/tomocy/kibidango/config"
 )
 
+var (
+	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/date"}
+	libs = []string{"/lib/ld-musl-x86_64.so.1"}
+)
+
 type Linux struct {
 	Root           string
 	Input          io.Reader
@@ -70,9 +75,7 @@ func (c *Linux) load() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
-	if err := c.enable([]string{
-		"/bin/sh", "/bin/ls", "/bin/ps",
-	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
+	if err := c.enable(bins, libs...); err != nil {
 		return reportErr("enable", err)
 	}
 	if err := c.mountProcs(); err != nil {
