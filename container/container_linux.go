@@ -11,7 +11,9 @@ import (
 )
 
 type Linux struct {
-	Root string
+	Root           string
+	Input          io.Reader
+	Output, Errput io.Writer
 }
 
 func (c *Linux) Run(conf *config.Config) error {
@@ -26,11 +28,11 @@ func (c *Linux) Run(conf *config.Config) error {
 }
 
 func (c *Linux) launch() error {
-	cmd := buildCloneCommand("-load")
+	cmd := c.buildCloneCommand("-load")
 	return cmd.Run()
 }
 
-func buildCloneCommand(args ...string) *exec.Cmd {
+func (c *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 	cmd := exec.Command("/proc/self/exe", args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET | syscall.CLONE_NEWNS |
@@ -50,7 +52,7 @@ func buildCloneCommand(args ...string) *exec.Cmd {
 			},
 		},
 	}
-	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
+	cmd.Stdin, cmd.Stdout, cmd.Stderr = c.Input, c.Output, c.Errput
 
 	return cmd
 }
