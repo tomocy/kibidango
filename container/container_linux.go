@@ -88,19 +88,28 @@ func (c *Linux) prepare() error {
 }
 
 func (c *Linux) enableAll(names []string, deps ...string) error {
+	for i, name := range names {
+		var onces []string
+		if i == 0 {
+			onces = deps
+		}
+
+		if err := c.enable(name, onces...); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (c *Linux) enable(name string, deps ...string) error {
 	for _, dep := range deps {
 		if err := copyFile(dep, c.joinRoot(dep)); err != nil {
 			return err
 		}
 	}
 
-	for _, name := range names {
-		if err := copyFile(name, c.joinRoot(name)); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return copyFile(name, c.joinRoot(name))
 }
 
 func copyFile(src, dest string) error {
