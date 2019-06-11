@@ -3,11 +3,11 @@ package config
 import "flag"
 
 func Parse() *Config {
-	willLoad := flag.Bool("load", false, "load process as container")
+	willBoot := flag.Bool("boot", false, "boot container")
 	flag.Parse()
 	cmd := CommandLaunch
-	if *willLoad {
-		cmd = CommandLoad
+	if *willBoot {
+		cmd = CommandBoot
 	}
 
 	return &Config{
@@ -22,7 +22,7 @@ type Config struct {
 const (
 	_ Command = iota
 	CommandLaunch
-	CommandLoad
+	CommandBoot
 )
 
 type Command int

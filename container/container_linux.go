@@ -20,15 +20,15 @@ func (c *Linux) Run(conf *config.Config) error {
 	switch conf.Command {
 	case config.CommandLaunch:
 		return c.launch()
-	case config.CommandLoad:
-		return c.load("/bin/sh")
+	case config.CommandBoot:
+		return c.boot("/bin/sh")
 	default:
 		return nil
 	}
 }
 
 func (c *Linux) launch() error {
-	cmd := c.buildCloneCommand("-load")
+	cmd := c.buildCloneCommand("-boot")
 	return cmd.Run()
 }
 
@@ -57,15 +57,15 @@ func (c *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 	return cmd
 }
 
-func (c *Linux) load(name string) error {
-	if err := c.init(); err != nil {
+func (c *Linux) boot(name string) error {
+	if err := c.load(); err != nil {
 		return err
 	}
 
 	return syscall.Exec(name, []string{name}, os.Environ())
 }
 
-func (c *Linux) init() error {
+func (c *Linux) load() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
