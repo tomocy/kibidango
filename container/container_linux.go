@@ -69,16 +69,32 @@ func (c *Linux) load(name string) error {
 }
 
 func (c *Linux) prepare() error {
-	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
+	if err := c.ensure([]string{
+		"/lib/ld-musl-x86_64.so.1",
+	}); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/lib"), 0755); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
 		return err
 	}
 	if err := c.enableAll([]string{
 		"/bin/sh", "/bin/ls", "/bin/ps",
-	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
+	}); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (c *Linux) ensure(libs []string) error {
+	if err := os.MkdirAll(c.joinRoot("/lib"), 0755); err != nil {
+		return err
+	}
+
+	for _, lib := range libs {
+		if err := copyFile(lib, c.joinRoot(lib)); err != nil {
+			return err
+		}
 	}
 
 	return nil
