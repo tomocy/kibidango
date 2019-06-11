@@ -10,7 +10,9 @@ import (
 
 func main() {
 	conf := config.Parse()
-	cont := new(container.LinuxContainer)
+	cont := &container.LinuxContainer{
+		Root: "/root/container",
+	}
 	if err := cont.Run(conf); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to run: %s\n", err)
 		os.Exit(1)

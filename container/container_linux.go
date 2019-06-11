@@ -10,7 +10,9 @@ import (
 	"github.com/tomocy/kibidango/config"
 )
 
-type LinuxContainer struct{}
+type LinuxContainer struct {
+	Root string
+}
 
 func (c *LinuxContainer) Run(conf *config.Config) error {
 	switch conf.Command {
@@ -65,16 +67,16 @@ func (c *LinuxContainer) load(name string) error {
 }
 
 func (c *LinuxContainer) prepare() error {
-	if err := os.MkdirAll("/root/container/proc", 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/proc"), 0777); err != nil {
 		return err
 	}
-	if err := os.MkdirAll("/root/container/bin", 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/bin"), 0777); err != nil {
 		return err
 	}
-	if err := os.MkdirAll("/root/container/lib", 0777); err != nil {
+	if err := os.MkdirAll(c.joinRoot("/lib"), 0777); err != nil {
 		return err
 	}
-	if err := enableAll([]string{
+	if err := c.enableAll([]string{
 		"/bin/sh", "/bin/ls",
 	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
 		return err
@@ -83,15 +85,15 @@ func (c *LinuxContainer) prepare() error {
 	return nil
 }
 
-func enableAll(names []string, deps ...string) error {
+func (c *LinuxContainer) enableAll(names []string, deps ...string) error {
 	for _, dep := range deps {
-		if err := copyFile(dep, filepath.Join("/root/container", dep)); err != nil {
+		if err := copyFile(dep, c.joinRoot(dep)); err != nil {
 			return err
 		}
 	}
 
 	for _, name := range names {
-		if err := copyFile(name, filepath.Join("/root/container", name)); err != nil {
+		if err := copyFile(name, c.joinRoot(name)); err != nil {
 			return err
 		}
 	}
@@ -128,7 +130,7 @@ func (c *LinuxContainer) init() error {
 	), ""); err != nil {
 		return err
 	}
-	if err := syscall.Chroot("/root/container"); err != nil {
+	if err := syscall.Chroot(c.Root); err != nil {
 		return err
 	}
 	if err := syscall.Chdir("/"); err != nil {
@@ -136,4 +138,8 @@ func (c *LinuxContainer) init() error {
 	}
 
 	return nil
+}
+
+func (c *LinuxContainer) joinRoot(path string) string {
+	return filepath.Join(c.Root, path)
 }
