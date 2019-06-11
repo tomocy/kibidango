@@ -17,10 +17,10 @@ type Linux struct {
 }
 
 func (c *Linux) Run(conf *config.Config) error {
-	switch conf.Command {
-	case config.CommandLaunch:
+	switch conf.Phase {
+	case config.PhaseLaunch:
 		return c.launch()
-	case config.CommandBoot:
+	case config.PhaseBoot:
 		return c.boot("/bin/sh")
 	default:
 		return nil

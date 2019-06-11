@@ -5,24 +5,24 @@ import "flag"
 func Parse() *Config {
 	willBoot := flag.Bool("boot", false, "boot container")
 	flag.Parse()
-	cmd := CommandLaunch
+	phase := PhaseLaunch
 	if *willBoot {
-		cmd = CommandBoot
+		phase = PhaseBoot
 	}
 
 	return &Config{
-		Command: cmd,
+		Phase: phase,
 	}
 }
 
 type Config struct {
-	Command Command
+	Phase Phase
 }
 
 const (
-	_ Command = iota
-	CommandLaunch
-	CommandBoot
+	_ Phase = iota
+	PhaseLaunch
+	PhaseBoot
 )
 
-type Command int
+type Phase int
