@@ -155,7 +155,7 @@ func (c *Linux) pivotRoot() error {
 	if err := os.MkdirAll(c.joinRoot("/oldfs"), 0755); err != nil {
 		return err
 	}
-	if err := syscall.Mount(c.Root, c.Root, "", syscall.MS_BIND, ""); err != nil {
+	if err := syscall.Mount(c.Root, c.Root, "", syscall.MS_BIND|syscall.MS_REC, ""); err != nil {
 		return err
 	}
 	if err := syscall.PivotRoot(c.Root, c.joinRoot("/oldfs")); err != nil {
