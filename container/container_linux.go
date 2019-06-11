@@ -82,7 +82,7 @@ func (c *Linux) prepare() error {
 		return err
 	}
 	if err := c.enableAll([]string{
-		"/bin/sh", "/bin/ls",
+		"/bin/sh", "/bin/ls", "/bin/ps",
 	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
 		return err
 	}
