@@ -3,16 +3,27 @@ package config
 import "flag"
 
 func Parse() *Config {
-	willBoot := flag.Bool("boot", false, "boot container")
-	flag.Parse()
+	flags := parseFlags()
 	phase := PhaseLaunch
-	if *willBoot {
+	if flags.boot {
 		phase = PhaseBoot
 	}
 
 	return &Config{
 		Phase: phase,
 	}
+}
+
+func parseFlags() *flags {
+	flags := new(flags)
+	flag.BoolVar(&flags.boot, "boot", false, "boot container")
+	flag.Parse()
+
+	return flags
+}
+
+type flags struct {
+	boot bool
 }
 
 type Config struct {
