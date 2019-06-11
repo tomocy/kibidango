@@ -74,21 +74,29 @@ func (c *LinuxContainer) prepare() error {
 	if err := os.MkdirAll("/root/container/lib", 0777); err != nil {
 		return err
 	}
-	if err := enable("/bin/sh", "/lib/ld-musl-x86_64.so.1"); err != nil {
+	if err := enableAll([]string{
+		"/bin/sh", "/bin/ls",
+	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func enable(name string, deps ...string) error {
+func enableAll(names []string, deps ...string) error {
 	for _, dep := range deps {
 		if err := copyFile(dep, filepath.Join("/root/container", dep)); err != nil {
 			return err
 		}
 	}
 
-	return copyFile(name, filepath.Join("/root/container", name))
+	for _, name := range names {
+		if err := copyFile(name, filepath.Join("/root/container", name)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func copyFile(src, dest string) error {
