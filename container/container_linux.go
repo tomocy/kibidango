@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"syscall"
 
 	"github.com/tomocy/kibidango/config"
@@ -73,14 +74,21 @@ func (c *LinuxContainer) prepare() error {
 	if err := os.MkdirAll("/root/container/lib", 0777); err != nil {
 		return err
 	}
-	if err := copyFile("/lib/ld-musl-x86_64.so.1", "/root/container/lib/ld-musl-x86_64.so.1"); err != nil {
-		return err
-	}
-	if err := copyFile("/bin/sh", "/root/container/bin/sh"); err != nil {
+	if err := enable("/bin/sh", "/lib/ld-musl-x86_64.so.1"); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func enable(name string, deps ...string) error {
+	for _, dep := range deps {
+		if err := copyFile(dep, filepath.Join("/root/container", dep)); err != nil {
+			return err
+		}
+	}
+
+	return copyFile(name, filepath.Join("/root/container", name))
 }
 
 func copyFile(src, dest string) error {
