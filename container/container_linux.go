@@ -139,7 +139,7 @@ func (c *Linux) init() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
-	if err := syscall.Mount("/proc", "/proc", "proc", uintptr(
+	if err := syscall.Mount("/proc", c.joinRoot("/proc"), "proc", uintptr(
 		syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV,
 	), ""); err != nil {
 		return err
