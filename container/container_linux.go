@@ -1,6 +1,7 @@
 package container
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -59,7 +60,7 @@ func (c *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 
 func (c *Linux) boot(name string) error {
 	if err := c.load(); err != nil {
-		return err
+		return reportErr("load", err)
 	}
 
 	return syscall.Exec(name, []string{name}, os.Environ())
@@ -72,13 +73,13 @@ func (c *Linux) load() error {
 	if err := c.enable([]string{
 		"/bin/sh", "/bin/ls", "/bin/ps",
 	}, "/lib/ld-musl-x86_64.so.1"); err != nil {
-		return err
+		return reportErr("enable", err)
 	}
 	if err := c.mountProcs(); err != nil {
-		return err
+		return reportErr("mount procs", err)
 	}
 	if err := c.pivotRoot(); err != nil {
-		return err
+		return reportErr("pivot root", err)
 	}
 
 	return nil
@@ -87,7 +88,7 @@ func (c *Linux) load() error {
 func (c *Linux) enable(bins []string, libs ...string) error {
 	if 1 <= len(libs) {
 		if err := c.ensure(libs); err != nil {
-			return err
+			return reportErr("ensure", err)
 		}
 	}
 
@@ -97,7 +98,7 @@ func (c *Linux) enable(bins []string, libs ...string) error {
 
 	for _, bin := range bins {
 		if err := copyFile(bin, c.joinRoot(bin)); err != nil {
-			return err
+			return reportErr("copy file", err)
 		}
 	}
 
@@ -111,7 +112,7 @@ func (c *Linux) ensure(libs []string) error {
 
 	for _, lib := range libs {
 		if err := copyFile(lib, c.joinRoot(lib)); err != nil {
-			return err
+			return reportErr("copy file", err)
 		}
 	}
 
@@ -142,8 +143,7 @@ func (c *Linux) mountProcs() error {
 	if err := os.MkdirAll(c.joinRoot("/proc"), 0755); err != nil {
 		return err
 	}
-	if err := syscall.Mount(
-		"/proc", c.joinRoot("/proc"), "proc", syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV, ""); err != nil {
+	if err := syscall.Mount("/proc", c.joinRoot("/proc"), "proc", syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV, ""); err != nil {
 		return err
 	}
 
@@ -175,4 +175,8 @@ func (c *Linux) pivotRoot() error {
 
 func (c *Linux) joinRoot(path string) string {
 	return filepath.Join(c.Root, path)
+}
+
+func reportErr(did string, err error) error {
+	return fmt.Errorf("failed to %s; %s", did, err)
 }
