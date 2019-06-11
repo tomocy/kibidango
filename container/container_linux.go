@@ -144,6 +144,17 @@ func (c *Linux) init() error {
 	), ""); err != nil {
 		return err
 	}
+	if err := c.pivotRoot(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Linux) pivotRoot() error {
+	if err := os.MkdirAll(c.joinRoot("/oldfs"), 0755); err != nil {
+		return err
+	}
 	if err := syscall.Mount(c.Root, c.Root, "", syscall.MS_BIND, ""); err != nil {
 		return err
 	}
