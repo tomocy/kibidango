@@ -3,6 +3,7 @@ package container
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -75,6 +76,9 @@ func (c *Linux) load() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
+	if err := c.limit(); err != nil {
+		return reportErr("limit", err)
+	}
 	if err := c.enable(bins, libs...); err != nil {
 		return reportErr("enable", err)
 	}
@@ -83,6 +87,36 @@ func (c *Linux) load() error {
 	}
 	if err := c.pivotRoot(); err != nil {
 		return reportErr("pivot root", err)
+	}
+
+	return nil
+}
+
+func (c *Linux) limit() error {
+	if err := c.limitCPUUsage(); err != nil {
+		return reportErr("limit cpu usage", err)
+	}
+
+	return nil
+}
+
+func (c *Linux) limitCPUUsage() error {
+	if err := os.MkdirAll("/sys/fs/cgroup/cpu/container", 0755); err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(
+		"/sys/fs/cgroup/cpu/container/cpu.cfs_quota_us",
+		[]byte("1000"),
+		0755,
+	); err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(
+		"/sys/fs/cgroup/cpu/container/tasks",
+		[]byte(fmt.Sprintf("%d", os.Getpid())),
+		0755,
+	); err != nil {
+		return err
 	}
 
 	return nil
