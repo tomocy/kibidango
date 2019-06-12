@@ -136,9 +136,6 @@ func (c *Linux) enable(bins []string, libs ...string) error {
 	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(c.joinRoot("/usr/bin"), 0755); err != nil {
-		return err
-	}
 
 	for _, bin := range bins {
 		if err := copyFile(bin, c.joinRoot(bin)); err != nil {
