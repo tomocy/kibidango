@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/date"}
+	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/cat", "/bin/date"}
 	libs = []string{"/lib/ld-musl-x86_64.so.1"}
 )
 
