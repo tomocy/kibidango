@@ -12,6 +12,10 @@ import (
 	"github.com/tomocy/kibidango/config"
 )
 
+const (
+	cfsQuotaUS = 5000
+)
+
 var (
 	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/date"}
 	libs = []string{"/lib/ld-musl-x86_64.so.1"}
@@ -106,7 +110,7 @@ func (c *Linux) limitCPUUsage() error {
 	}
 	if err := ioutil.WriteFile(
 		"/sys/fs/cgroup/cpu/container/cpu.cfs_quota_us",
-		[]byte("1000"),
+		[]byte(fmt.Sprintf("%d", cfsQuotaUS)),
 		0755,
 	); err != nil {
 		return err
@@ -130,6 +134,9 @@ func (c *Linux) enable(bins []string, libs ...string) error {
 	}
 
 	if err := os.MkdirAll(c.joinRoot("/bin"), 0755); err != nil {
+		return err
+	}
+	if err := os.MkdirAll(c.joinRoot("/usr/bin"), 0755); err != nil {
 		return err
 	}
 
