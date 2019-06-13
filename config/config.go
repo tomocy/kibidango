@@ -1,6 +1,9 @@
 package config
 
-import "flag"
+import (
+	"flag"
+	"runtime"
+)
 
 func Parse() *Config {
 	flags := parseFlags()
@@ -10,6 +13,7 @@ func Parse() *Config {
 	}
 
 	return &Config{
+		OS:      runtime.GOOS,
 		Phase:   phase,
 		Command: flags.command,
 	}
@@ -30,11 +34,14 @@ type flags struct {
 }
 
 type Config struct {
+	OS      string
 	Phase   Phase
 	Command string
 }
 
 const (
+	OSLinux = "linux"
+
 	_ Phase = iota
 	PhaseLaunch
 	PhaseBoot

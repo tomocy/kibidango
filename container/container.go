@@ -1,8 +1,12 @@
 package container
 
-import "github.com/tomocy/kibidango/config"
+import (
+	"github.com/tomocy/kibidango/booter"
+	"github.com/tomocy/kibidango/config"
+	"github.com/tomocy/kibidango/launcher"
+)
 
-func New(lcher launcher, bter booter) *Container {
+func New(lcher launcher.Launcher, bter booter.Booter) *Container {
 	return &Container{
 		launcher: lcher,
 		booter:   bter,
@@ -10,16 +14,8 @@ func New(lcher launcher, bter booter) *Container {
 }
 
 type Container struct {
-	launcher launcher
-	booter   booter
-}
-
-type launcher interface {
-	Launch(cmd string) error
-}
-
-type booter interface {
-	Boot(cmd string) error
+	launcher launcher.Launcher
+	booter   booter.Booter
 }
 
 func (c *Container) Start(conf *config.Config) error {
@@ -41,10 +37,10 @@ func (c *Container) boot(cmd string) error {
 	return boot(c.booter, cmd)
 }
 
-func launch(lcher launcher, cmd string) error {
+func launch(lcher launcher.Launcher, cmd string) error {
 	return lcher.Launch(cmd)
 }
 
-func boot(bter booter, cmd string) error {
+func boot(bter booter.Booter, cmd string) error {
 	return bter.Boot(cmd)
 }
