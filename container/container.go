@@ -22,7 +22,7 @@ type booter interface {
 	Boot(cmd string) error
 }
 
-func (c *Container) Run(conf *config.Config) error {
+func (c *Container) Start(conf *config.Config) error {
 	switch conf.Phase {
 	case config.PhaseLaunch:
 		return c.launch(conf.Command)
