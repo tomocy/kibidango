@@ -18,7 +18,7 @@ var (
 	libs = []string{"/lib/ld-musl-x86_64.so.1"}
 )
 
-func NewLinux(root string) *Linux {
+func ForLinux(root string) *Linux {
 	return &Linux{
 		root: root,
 	}
