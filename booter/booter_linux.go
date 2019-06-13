@@ -18,23 +18,22 @@ var (
 	libs = []string{"/lib/ld-musl-x86_64.so.1"}
 )
 
-func NewLinux(root, cmd string) *Linux {
+func NewLinux(root string) *Linux {
 	return &Linux{
-		root:    root,
-		command: cmd,
+		root: root,
 	}
 }
 
 type Linux struct {
-	root, command string
+	root string
 }
 
-func (l *Linux) Boot() error {
+func (l *Linux) Boot(cmd string) error {
 	if err := l.load(); err != nil {
 		return reportErr("load", err)
 	}
 
-	return syscall.Exec(l.command, []string{l.command}, os.Environ())
+	return syscall.Exec(cmd, []string{cmd}, os.Environ())
 }
 
 func (l *Linux) load() error {

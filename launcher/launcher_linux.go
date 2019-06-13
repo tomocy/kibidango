@@ -11,25 +11,22 @@ import (
 func NewLinux(
 	input io.Reader,
 	output, errput io.Writer,
-	cmd string,
 ) *Linux {
 	return &Linux{
-		input:   input,
-		output:  output,
-		errput:  errput,
-		command: cmd,
+		input:  input,
+		output: output,
+		errput: errput,
 	}
 }
 
 type Linux struct {
 	input          io.Reader
 	output, errput io.Writer
-	command        string
 }
 
-func (l *Linux) Launch() error {
-	cmd := l.buildCloneCommand("-boot", fmt.Sprintf("-command=%s", l.command))
-	return cmd.Run()
+func (l *Linux) Launch(cmd string) error {
+	cloneCmd := l.buildCloneCommand("-boot", fmt.Sprintf("-command=%s", cmd))
+	return cloneCmd.Run()
 }
 
 func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
