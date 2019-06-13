@@ -30,13 +30,6 @@ func (l *Linux) Launch(cmd string) error {
 }
 
 func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
-	cmd := buildCloneCommand(args...)
-	cmd.Stdin, cmd.Stdout, cmd.Stderr = l.input, l.output, l.errput
-
-	return cmd
-}
-
-func buildCloneCommand(args ...string) *exec.Cmd {
 	cmd := exec.Command("/proc/self/exe", args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET | syscall.CLONE_NEWNS |
@@ -56,6 +49,7 @@ func buildCloneCommand(args ...string) *exec.Cmd {
 			},
 		},
 	}
+	cmd.Stdin, cmd.Stdout, cmd.Stderr = l.input, l.output, l.errput
 
 	return cmd
 }
