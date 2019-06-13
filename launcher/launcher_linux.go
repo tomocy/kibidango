@@ -8,7 +8,7 @@ import (
 	"syscall"
 )
 
-func NewLinux(
+func ForLinux(
 	input io.Reader,
 	output, errput io.Writer,
 ) *Linux {

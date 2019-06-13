@@ -12,7 +12,7 @@ import (
 
 func main() {
 	conf := config.Parse()
-	lcher := launcher.NewLinux(os.Stdin, os.Stdout, os.Stderr)
+	lcher := launcher.ForLinux(os.Stdin, os.Stdout, os.Stderr)
 	bter := booter.NewLinux("/root/container")
 	cner := container.New(lcher, bter)
 	if err := cner.Start(conf); err != nil {
