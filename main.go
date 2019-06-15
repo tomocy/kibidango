@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/tomocy/kibidango/booter"
 	"github.com/tomocy/kibidango/config"
-	"github.com/tomocy/kibidango/container"
-	"github.com/tomocy/kibidango/launcher"
+	"github.com/tomocy/kibidango/engine/booter"
+	"github.com/tomocy/kibidango/engine/container"
+	"github.com/tomocy/kibidango/engine/launcher"
 )
 
 func main() {
