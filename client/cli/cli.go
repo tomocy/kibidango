@@ -3,7 +3,9 @@ package cli
 import "github.com/urfave/cli"
 
 const (
-	name = "kibidango"
+	name    = "kibidango"
+	usage   = "a client for linux container runtime"
+	version = "0.0.1"
 )
 
 func New() *CLI {
@@ -17,11 +19,14 @@ type CLI struct {
 }
 
 func (c *CLI) init() {
+	c.app = cli.NewApp()
 	c.initBasic()
 }
 
 func (c *CLI) initBasic() {
 	c.app.Name = name
+	c.app.Usage = usage
+	c.app.Version = version
 }
 
 func (c *CLI) Run(args []string) error {
