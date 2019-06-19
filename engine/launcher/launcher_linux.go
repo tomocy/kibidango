@@ -1,7 +1,6 @@
 package launcher
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -24,8 +23,8 @@ type Linux struct {
 	output, errput io.Writer
 }
 
-func (l *Linux) Launch(cmd string) error {
-	cloneCmd := l.buildCloneCommand("-boot", fmt.Sprintf("-command=%s", cmd))
+func (l *Linux) Launch() error {
+	cloneCmd := l.buildCloneCommand("start")
 	return cloneCmd.Run()
 }
 

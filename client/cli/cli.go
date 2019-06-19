@@ -1,6 +1,14 @@
 package cli
 
-import "github.com/urfave/cli"
+import (
+	"os"
+	"runtime"
+
+	"github.com/tomocy/kibidango/engine/booter"
+	containerPkg "github.com/tomocy/kibidango/engine/container"
+	"github.com/tomocy/kibidango/engine/launcher"
+	"github.com/urfave/cli"
+)
 
 const (
 	name    = "kibidango"
@@ -21,6 +29,7 @@ type CLI struct {
 func (c *CLI) init() {
 	c.app = cli.NewApp()
 	c.initBasic()
+	c.initCommands()
 }
 
 func (c *CLI) initBasic() {
@@ -29,6 +38,35 @@ func (c *CLI) initBasic() {
 	c.app.Version = version
 }
 
+func (c *CLI) initCommands() {
+	c.app.Commands = []cli.Command{
+		{
+			Name:   "create",
+			Action: create,
+		},
+		{
+			Name:   "start",
+			Action: start,
+		},
+	}
+}
+
 func (c *CLI) Run(args []string) error {
 	return c.app.Run(args)
+}
+
+func create(ctx *cli.Context) error {
+	ctner := container()
+	return ctner.Launch()
+}
+
+func start(ctx *cli.Context) error {
+	ctner := container()
+	return ctner.Boot("/bin/sh")
+}
+
+func container() *containerPkg.Container {
+	lcher := launcher.ForOS(runtime.GOOS, os.Stdin, os.Stdout, os.Stderr)
+	bter := booter.ForOS(runtime.GOOS, "/root/container")
+	return containerPkg.New(lcher, bter)
 }
