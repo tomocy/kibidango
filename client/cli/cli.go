@@ -6,7 +6,7 @@ import (
 
 	"github.com/tomocy/kibidango/engine/container"
 	createrPkg "github.com/tomocy/kibidango/engine/creater"
-	"github.com/tomocy/kibidango/engine/initializer"
+	initializerPkg "github.com/tomocy/kibidango/engine/initializer"
 	"github.com/urfave/cli"
 )
 
@@ -70,12 +70,21 @@ func creater(os string) container.Creater {
 	}
 }
 
+func initialize(ctx *cli.Context) error {
+	ctner := new(container.Container)
+	initer := initializer(runtime.GOOS)
+	return ctner.Init(initer)
+}
+
+func initializer(os string) container.Initializer {
+	switch os {
+	case osLinux:
+		return initializerPkg.ForLinux("/root/container")
+	default:
+		return nil
+	}
+}
+
 const (
 	osLinux = "linux"
 )
-
-func initialize(ctx *cli.Context) error {
-	ctner := new(container.Container)
-	initer := initializer.ForOS(runtime.GOOS, "/root/container")
-	return ctner.Init(initer)
-}

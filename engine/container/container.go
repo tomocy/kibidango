@@ -1,9 +1,5 @@
 package container
 
-import (
-	"github.com/tomocy/kibidango/engine/initializer"
-)
-
 type Container struct{}
 
 func (c *Container) Create(creater Creater, args ...string) error {
@@ -18,10 +14,14 @@ type Creater interface {
 	Create(args ...string) error
 }
 
-func (c *Container) Init(initer initializer.Initializer) error {
+func (c *Container) Init(initer Initializer) error {
 	return initialize(initer)
 }
 
-func initialize(initer initializer.Initializer) error {
+func initialize(initer Initializer) error {
 	return initer.Init()
+}
+
+type Initializer interface {
+	Init() error
 }
