@@ -1,4 +1,4 @@
-package launcher
+package creater
 
 import (
 	"io"
@@ -23,7 +23,7 @@ type Linux struct {
 	output, errput io.Writer
 }
 
-func (l *Linux) Launch() error {
+func (l *Linux) Create() error {
 	cloneCmd := l.buildCloneCommand("start")
 	return cloneCmd.Run()
 }
