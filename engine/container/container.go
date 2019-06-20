@@ -5,24 +5,14 @@ import (
 	"github.com/tomocy/kibidango/engine/initializer"
 )
 
-func New(creater creater.Creater, initer initializer.Initializer) *Container {
-	return &Container{
-		creater: creater,
-		initer:  initer,
-	}
+type Container struct{}
+
+func (c *Container) Create(creater creater.Creater, args ...string) error {
+	return create(creater, args...)
 }
 
-type Container struct {
-	creater creater.Creater
-	initer  initializer.Initializer
-}
-
-func (c *Container) Create(args ...string) error {
-	return create(c.creater, args...)
-}
-
-func (c *Container) Init() error {
-	return initialize(c.initer)
+func (c *Container) Init(initer initializer.Initializer) error {
+	return initialize(initer)
 }
 
 func create(creater creater.Creater, args ...string) error {
