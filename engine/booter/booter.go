@@ -1,10 +1,8 @@
 package booter
 
-import "github.com/tomocy/kibidango/config"
-
 func ForOS(os string, root string) Booter {
 	switch os {
-	case config.OSLinux:
+	case "linux":
 		return ForLinux(root)
 	default:
 		return nil

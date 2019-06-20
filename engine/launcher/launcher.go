@@ -1,14 +1,10 @@
 package launcher
 
-import (
-	"io"
-
-	"github.com/tomocy/kibidango/config"
-)
+import "io"
 
 func ForOS(os string, input io.Reader, output, errput io.Writer) Launcher {
 	switch os {
-	case config.OSLinux:
+	case "linux":
 		return ForLinux(input, output, errput)
 	default:
 		return nil
