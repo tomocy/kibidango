@@ -1,13 +1,4 @@
 # kibidango
 
-Container from scratch
-
-### Environment
-```
-docker run --rm -it -v $(pwd):/go/src/github.com/tomocy/kibidango -w /go/src/github.com/tomocy/kibidango --privileged golang:alpine
-```
-
-### Usage
-```
-go run main.go
-```
+a container from scratch which implements [OCI runtime specification](https://github.com/opencontainers/runtime-spec).  
+[Momotarou](https://github.com/tomocy/momotarou) is a cli client for this.
