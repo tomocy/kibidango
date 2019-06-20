@@ -21,14 +21,14 @@ func (c *Container) Launch() error {
 	return launch(c.launcher)
 }
 
-func (c *Container) Boot(cmd string) error {
-	return boot(c.booter, cmd)
+func (c *Container) Boot() error {
+	return boot(c.booter)
 }
 
 func launch(lcher launcher.Launcher) error {
 	return lcher.Launch()
 }
 
-func boot(bter booter.Booter, cmd string) error {
-	return bter.Boot(cmd)
+func boot(bter booter.Booter) error {
+	return bter.Boot()
 }

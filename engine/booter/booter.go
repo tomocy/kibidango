@@ -12,5 +12,5 @@ func ForOS(os string, root string) Booter {
 }
 
 type Booter interface {
-	Boot(cmd string) error
+	Boot() error
 }

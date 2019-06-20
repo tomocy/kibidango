@@ -62,7 +62,7 @@ func create(ctx *cli.Context) error {
 
 func start(ctx *cli.Context) error {
 	ctner := container()
-	return ctner.Boot("/bin/sh")
+	return ctner.Boot()
 }
 
 func container() *containerPkg.Container {

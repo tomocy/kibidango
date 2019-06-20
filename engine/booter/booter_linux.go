@@ -28,15 +28,7 @@ type Linux struct {
 	root string
 }
 
-func (l *Linux) Boot(cmd string) error {
-	if err := l.load(); err != nil {
-		return reportErr("load", err)
-	}
-
-	return syscall.Exec(cmd, []string{cmd}, os.Environ())
-}
-
-func (l *Linux) load() error {
+func (l *Linux) Boot() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
