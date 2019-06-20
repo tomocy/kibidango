@@ -12,5 +12,5 @@ func ForOS(os string, input io.Reader, output, errput io.Writer) Creater {
 }
 
 type Creater interface {
-	Create() error
+	Create(args ...string) error
 }

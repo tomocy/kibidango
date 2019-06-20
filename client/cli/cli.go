@@ -45,8 +45,8 @@ func (c *CLI) initCommands() {
 			Action: create,
 		},
 		{
-			Name:   "start",
-			Action: start,
+			Name:   "init",
+			Action: initialize,
 		},
 	}
 }
@@ -57,10 +57,10 @@ func (c *CLI) Run(args []string) error {
 
 func create(ctx *cli.Context) error {
 	ctner := container()
-	return ctner.Create()
+	return ctner.Create("init")
 }
 
-func start(ctx *cli.Context) error {
+func initialize(ctx *cli.Context) error {
 	ctner := container()
 	return ctner.Init()
 }
