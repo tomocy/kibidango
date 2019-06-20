@@ -1,11 +1,11 @@
 package cli
 
 import (
-	"os"
+	osPkg "os"
 	"runtime"
 
 	"github.com/tomocy/kibidango/engine/container"
-	"github.com/tomocy/kibidango/engine/creater"
+	createrPkg "github.com/tomocy/kibidango/engine/creater"
 	"github.com/tomocy/kibidango/engine/initializer"
 	"github.com/urfave/cli"
 )
@@ -57,9 +57,22 @@ func (c *CLI) Run(args []string) error {
 
 func create(ctx *cli.Context) error {
 	ctner := new(container.Container)
-	creater := creater.ForOS(runtime.GOOS, os.Stdin, os.Stdout, os.Stderr)
+	creater := creater(runtime.GOOS)
 	return ctner.Create(creater, "init")
 }
+
+func creater(os string) container.Creater {
+	switch os {
+	case osLinux:
+		return createrPkg.ForLinux(osPkg.Stdin, osPkg.Stdout, osPkg.Stderr)
+	default:
+		return nil
+	}
+}
+
+const (
+	osLinux = "linux"
+)
 
 func initialize(ctx *cli.Context) error {
 	ctner := new(container.Container)
