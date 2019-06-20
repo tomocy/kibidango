@@ -4,9 +4,9 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/tomocy/kibidango/engine/booter"
 	containerPkg "github.com/tomocy/kibidango/engine/container"
 	"github.com/tomocy/kibidango/engine/creater"
+	"github.com/tomocy/kibidango/engine/initializer"
 	"github.com/urfave/cli"
 )
 
@@ -62,11 +62,11 @@ func create(ctx *cli.Context) error {
 
 func start(ctx *cli.Context) error {
 	ctner := container()
-	return ctner.Boot()
+	return ctner.Init()
 }
 
 func container() *containerPkg.Container {
 	creater := creater.ForOS(runtime.GOOS, os.Stdin, os.Stdout, os.Stderr)
-	bter := booter.ForOS(runtime.GOOS, "/root/container")
-	return containerPkg.New(creater, bter)
+	initer := initializer.ForOS(runtime.GOOS, "/root/container")
+	return containerPkg.New(creater, initer)
 }

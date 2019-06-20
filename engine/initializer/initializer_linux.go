@@ -1,4 +1,4 @@
-package booter
+package initializer
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ type Linux struct {
 	root string
 }
 
-func (l *Linux) Boot() error {
+func (l *Linux) Init() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}

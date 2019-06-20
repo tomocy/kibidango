@@ -1,34 +1,34 @@
 package container
 
 import (
-	"github.com/tomocy/kibidango/engine/booter"
 	"github.com/tomocy/kibidango/engine/creater"
+	"github.com/tomocy/kibidango/engine/initializer"
 )
 
-func New(creater creater.Creater, bter booter.Booter) *Container {
+func New(creater creater.Creater, initer initializer.Initializer) *Container {
 	return &Container{
 		creater: creater,
-		booter:  bter,
+		initer:  initer,
 	}
 }
 
 type Container struct {
 	creater creater.Creater
-	booter  booter.Booter
+	initer  initializer.Initializer
 }
 
 func (c *Container) Create() error {
 	return create(c.creater)
 }
 
-func (c *Container) Boot() error {
-	return boot(c.booter)
+func (c *Container) Init() error {
+	return initialize(c.initer)
 }
 
 func create(creater creater.Creater) error {
 	return creater.Create()
 }
 
-func boot(bter booter.Booter) error {
-	return bter.Boot()
+func initialize(initer initializer.Initializer) error {
+	return initer.Init()
 }
