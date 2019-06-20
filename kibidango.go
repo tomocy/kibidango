@@ -1,8 +1,8 @@
-package container
+package kibidango
 
-type Container struct{}
+type Kibidango struct{}
 
-func (c *Container) Create(creater Creater, args ...string) error {
+func (c *Kibidango) Create(creater Creater, args ...string) error {
 	return create(creater, args...)
 }
 
@@ -14,7 +14,7 @@ type Creater interface {
 	Create(args ...string) error
 }
 
-func (c *Container) Init(initer Initializer) error {
+func (c *Kibidango) Init(initer Initializer) error {
 	return initialize(initer)
 }
 
