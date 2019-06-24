@@ -38,3 +38,15 @@ func initialize(initer Initializer) error {
 type Initializer interface {
 	Init() error
 }
+
+func (c *Kibidango) Save(saver Saver) error {
+	return save(saver, c)
+}
+
+func save(saver Saver, ctner *Kibidango) error {
+	return saver.Save(ctner)
+}
+
+type Saver interface {
+	Save(ctner *Kibidango) error
+}
