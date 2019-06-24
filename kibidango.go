@@ -1,6 +1,19 @@
 package kibidango
 
-type Kibidango struct{}
+import "errors"
+
+type Kibidango struct {
+	ID string
+}
+
+func (c *Kibidango) UpdateID(id string) error {
+	if id == "" {
+		return errors.New("id should not be empty")
+	}
+	c.ID = id
+
+	return nil
+}
 
 func (c *Kibidango) Create(creater Creater, args ...string) error {
 	return create(creater, args...)
