@@ -6,16 +6,16 @@ type Kibidango struct {
 	ID string
 }
 
-func (c *Kibidango) UpdateID(id string) error {
+func (k *Kibidango) UpdateID(id string) error {
 	if id == "" {
 		return errors.New("id should not be empty")
 	}
-	c.ID = id
+	k.ID = id
 
 	return nil
 }
 
-func (c *Kibidango) Create(creater Creater, args ...string) error {
+func (k *Kibidango) Create(creater Creater, args ...string) error {
 	return create(creater, args...)
 }
 
@@ -27,7 +27,7 @@ type Creater interface {
 	Create(args ...string) error
 }
 
-func (c *Kibidango) Init(initer Initializer) error {
+func (k *Kibidango) Init(initer Initializer) error {
 	return initialize(initer)
 }
 
@@ -39,8 +39,8 @@ type Initializer interface {
 	Init() error
 }
 
-func (c *Kibidango) Save(saver Saver) error {
-	return save(saver, c)
+func (k *Kibidango) Save(saver Saver) error {
+	return save(saver, k)
 }
 
 func save(saver Saver, ctner *Kibidango) error {
