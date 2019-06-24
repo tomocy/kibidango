@@ -14,8 +14,8 @@ func ForLinux() *Linux {
 
 type Linux struct{}
 
-func (l *Linux) Save(ctner *kibidango.Kibidango) error {
-	destDir := filepath.Join("/run/kibidango", ctner.ID)
+func (l *Linux) Save(kibi *kibidango.Kibidango) error {
+	destDir := filepath.Join("/run/kibidango", kibi.ID)
 	if err := os.MkdirAll(destDir, 0777); err != nil {
 		return err
 	}
@@ -25,5 +25,5 @@ func (l *Linux) Save(ctner *kibidango.Kibidango) error {
 		return err
 	}
 
-	return json.NewEncoder(dest).Encode(ctner)
+	return json.NewEncoder(dest).Encode(kibi)
 }

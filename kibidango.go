@@ -43,10 +43,10 @@ func (k *Kibidango) Save(saver Saver) error {
 	return save(saver, k)
 }
 
-func save(saver Saver, ctner *Kibidango) error {
-	return saver.Save(ctner)
+func save(saver Saver, kibi *Kibidango) error {
+	return saver.Save(kibi)
 }
 
 type Saver interface {
-	Save(ctner *Kibidango) error
+	Save(kibi *Kibidango) error
 }
