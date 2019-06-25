@@ -14,19 +14,19 @@ func ForLinux() *Linux {
 type Linux struct{}
 
 func (l *Linux) List(loader kibidango.Loader) ([]*kibidango.Kibidango, error) {
-	dir := "/run/kibidango"
-	files, err := read(dir)
+	srcDir := "/run/kibidango"
+	srces, err := read(srcDir)
 	if err != nil {
 		return nil, err
 	}
 
 	var kibis []*kibidango.Kibidango
-	for _, file := range files {
-		if !file.IsDir() {
+	for _, src := range srces {
+		if !src.IsDir() {
 			continue
 		}
 
-		kibi, err := load(loader, file.Name())
+		kibi, err := load(loader, src.Name())
 		if err != nil {
 			return nil, err
 		}
@@ -38,9 +38,9 @@ func (l *Linux) List(loader kibidango.Loader) ([]*kibidango.Kibidango, error) {
 }
 
 func read(dir string) ([]os.FileInfo, error) {
-	var infos []os.FileInfo
+	var srces []os.FileInfo
 	if _, err := os.Stat(dir); err != nil {
-		return infos, nil
+		return srces, nil
 	}
 
 	return ioutil.ReadDir(dir)

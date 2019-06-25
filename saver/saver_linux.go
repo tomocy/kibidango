@@ -19,6 +19,7 @@ func (l *Linux) Save(kibi *kibidango.Kibidango) error {
 	if err := os.MkdirAll(destDir, 0777); err != nil {
 		return err
 	}
+
 	destName := filepath.Join(destDir, "state.json")
 	dest, err := os.OpenFile(destName, os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
