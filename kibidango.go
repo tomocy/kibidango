@@ -15,16 +15,16 @@ func (k *Kibidango) UpdateID(id string) error {
 	return nil
 }
 
-func (k *Kibidango) Create(creater Creater, args ...string) error {
-	return create(creater, args...)
+func (k *Kibidango) Clone(cloner Cloner, args ...string) error {
+	return cloner.Clone(args...)
 }
 
-func create(creater Creater, args ...string) error {
-	return creater.Create(args...)
+func cloner(cloner Cloner, args ...string) error {
+	return cloner.Clone(args...)
 }
 
-type Creater interface {
-	Create(args ...string) error
+type Cloner interface {
+	Clone(args ...string) error
 }
 
 func (k *Kibidango) Init(initer Initializer) error {

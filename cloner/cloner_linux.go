@@ -1,4 +1,4 @@
-package creater
+package cloner
 
 import (
 	"io"
@@ -23,9 +23,9 @@ type Linux struct {
 	output, errput io.Writer
 }
 
-func (l *Linux) Create(args ...string) error {
-	cloneCmd := l.buildCloneCommand(args...)
-	return cloneCmd.Run()
+func (l *Linux) Clone(args ...string) error {
+	cmd := l.buildCloneCommand(args...)
+	return cmd.Run()
 }
 
 func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
