@@ -51,6 +51,14 @@ type Saver interface {
 	Save(kibi *Kibidango) error
 }
 
+func List(lister Lister, loader Loader) ([]*Kibidango, error) {
+	return lister.List(loader)
+}
+
+type Lister interface {
+	List(loader Loader) ([]*Kibidango, error)
+}
+
 func (k *Kibidango) Load(loader Loader) error {
 	return load(loader, k)
 }
