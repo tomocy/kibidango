@@ -50,3 +50,15 @@ func save(saver Saver, kibi *Kibidango) error {
 type Saver interface {
 	Save(kibi *Kibidango) error
 }
+
+func (k *Kibidango) Load(loader Loader) error {
+	return load(loader, k)
+}
+
+func load(loader Loader, kibi *Kibidango) error {
+	return loader.Load(kibi)
+}
+
+type Loader interface {
+	Load(kibi *Kibidango) error
+}
