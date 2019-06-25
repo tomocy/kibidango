@@ -70,3 +70,15 @@ func load(loader Loader, kibi *Kibidango) error {
 type Loader interface {
 	Load(kibi *Kibidango) error
 }
+
+func (k *Kibidango) Terminate(terminator Terminator) error {
+	return terminate(terminator, k)
+}
+
+func terminate(terminator Terminator, kibi *Kibidango) error {
+	return terminator.Terminate(kibi)
+}
+
+type Terminator interface {
+	Terminate(kibi *Kibidango) error
+}
