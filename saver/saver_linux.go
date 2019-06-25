@@ -16,12 +16,12 @@ type Linux struct{}
 
 func (l *Linux) Save(kibi *kibidango.Kibidango) error {
 	destDir := filepath.Join("/run/kibidango", kibi.ID)
-	if err := os.MkdirAll(destDir, 0777); err != nil {
+	if err := os.MkdirAll(destDir, 0755); err != nil {
 		return err
 	}
 
 	destName := filepath.Join(destDir, "state.json")
-	dest, err := os.OpenFile(destName, os.O_CREATE|os.O_RDWR, 0777)
+	dest, err := os.OpenFile(destName, os.O_CREATE|os.O_RDWR, 0755)
 	if err != nil {
 		return err
 	}
