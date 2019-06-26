@@ -19,19 +19,11 @@ func (k *Kibidango) Clone(cloner Cloner, args ...string) error {
 	return cloner.Clone(args...)
 }
 
-func cloner(cloner Cloner, args ...string) error {
-	return cloner.Clone(args...)
-}
-
 type Cloner interface {
 	Clone(args ...string) error
 }
 
 func (k *Kibidango) Init(initer Initializer) error {
-	return initialize(initer)
-}
-
-func initialize(initer Initializer) error {
 	return initer.Init()
 }
 
@@ -40,11 +32,7 @@ type Initializer interface {
 }
 
 func (k *Kibidango) Save(saver Saver) error {
-	return save(saver, k)
-}
-
-func save(saver Saver, kibi *Kibidango) error {
-	return saver.Save(kibi)
+	return saver.Save(k)
 }
 
 type Saver interface {
@@ -60,11 +48,7 @@ type Lister interface {
 }
 
 func (k *Kibidango) Load(loader Loader) error {
-	return load(loader, k)
-}
-
-func load(loader Loader, kibi *Kibidango) error {
-	return loader.Load(kibi)
+	return loader.Load(k)
 }
 
 type Loader interface {
@@ -72,11 +56,7 @@ type Loader interface {
 }
 
 func (k *Kibidango) Terminate(terminator Terminator) error {
-	return terminate(terminator, k)
-}
-
-func terminate(terminator Terminator, kibi *Kibidango) error {
-	return terminator.Terminate(kibi)
+	return terminator.Terminate(k)
 }
 
 type Terminator interface {
