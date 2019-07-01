@@ -39,11 +39,11 @@ type Cloner interface {
 }
 
 func (k *Kibidango) Init(initer Initializer) error {
-	return initer.Init()
+	return initer.Init(k.Process)
 }
 
 type Initializer interface {
-	Init() error
+	Init(proc *Process) error
 }
 
 func (k *Kibidango) Save(saver Saver) error {

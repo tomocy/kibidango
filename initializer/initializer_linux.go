@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"syscall"
+
+	"github.com/tomocy/kibidango"
 )
 
 const (
@@ -28,7 +30,7 @@ type Linux struct {
 	root string
 }
 
-func (l *Linux) Init() error {
+func (l *Linux) Init(proc *kibidango.Process) error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return err
 	}
