@@ -20,6 +20,16 @@ func (k *Kibidango) UpdateID(id string) error {
 	return nil
 }
 
+func (k *Kibidango) UpdateProcess(proc *Process) error {
+	if proc == nil {
+		return errors.New("process should not be empty")
+	}
+
+	k.Process = proc
+
+	return nil
+}
+
 func (k *Kibidango) Clone(cloner Cloner, args ...string) error {
 	return cloner.Clone(args...)
 }
