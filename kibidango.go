@@ -3,7 +3,12 @@ package kibidango
 import "errors"
 
 type Kibidango struct {
-	ID string
+	ID      string
+	Process *Process
+}
+
+type Process struct {
+	Args []string
 }
 
 func (k *Kibidango) UpdateID(id string) error {
