@@ -6,12 +6,15 @@ import (
 	"syscall"
 )
 
-func ForLinux(id string) *Linux {
-	return &Linux{
-		kibidango: &kibidango{
-			id: id,
-		},
+func ForLinux(id string) (*Linux, error) {
+	kibi := new(kibidango)
+	if err := kibi.updateID(id); err != nil {
+		return nil, err
 	}
+
+	return &Linux{
+		kibidango: kibi,
+	}, nil
 }
 
 type Linux struct {

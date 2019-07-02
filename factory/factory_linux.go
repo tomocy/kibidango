@@ -13,5 +13,5 @@ func (l *Linux) Manufacture(id string) (*kibidango.Linux, error) {
 		return nil, err
 	}
 
-	return kibidango.ForLinux(id), nil
+	return kibidango.ForLinux(id)
 }
