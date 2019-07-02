@@ -24,6 +24,10 @@ type Linux struct {
 }
 
 func (l *Linux) Create(id string, args ...string) error {
+	return l.clone(args...)
+}
+
+func (l *Linux) clone(args ...string) error {
 	cmd := l.buildCloneCommand(args...)
 	return cmd.Run()
 }
