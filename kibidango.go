@@ -30,12 +30,12 @@ func (k *Kibidango) UpdateProcess(proc *Process) error {
 	return nil
 }
 
-func (k *Kibidango) Clone(cloner Cloner, args ...string) error {
-	return cloner.Clone(args...)
+func (k *Kibidango) Create(creater Creater, args ...string) error {
+	return creater.Create(args...)
 }
 
-type Cloner interface {
-	Clone(args ...string) error
+type Creater interface {
+	Create(args ...string) error
 }
 
 func (k *Kibidango) Init(initer Initializer) error {
