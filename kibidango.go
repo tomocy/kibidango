@@ -31,11 +31,11 @@ func (k *Kibidango) UpdateProcess(proc *Process) error {
 }
 
 func (k *Kibidango) Create(creater Creater, args ...string) error {
-	return creater.Create(args...)
+	return creater.Create(k.ID, args...)
 }
 
 type Creater interface {
-	Create(args ...string) error
+	Create(id string, args ...string) error
 }
 
 func (k *Kibidango) Init(initer Initializer) error {

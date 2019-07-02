@@ -23,7 +23,7 @@ type Linux struct {
 	output, errput io.Writer
 }
 
-func (l *Linux) Create(args ...string) error {
+func (l *Linux) Create(id string, args ...string) error {
 	cmd := l.buildCloneCommand(args...)
 	return cmd.Run()
 }
