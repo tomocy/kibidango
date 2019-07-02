@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"syscall"
 )
 
@@ -24,7 +25,28 @@ type Linux struct {
 }
 
 func (l *Linux) Create(id string, args ...string) error {
+	if err := l.prepare(id); err != nil {
+		return err
+	}
+
 	return l.clone(args...)
+}
+
+func (l *Linux) prepare(id string) error {
+	if err := l.createWorkspace(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *Linux) createWorkspace(id string) error {
+	dir := filepath.Join("/run/kibidango", id)
+	if err := os.MkdirAll(dir, 0777); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (l *Linux) clone(args ...string) error {
