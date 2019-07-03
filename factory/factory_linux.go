@@ -1,6 +1,8 @@
 package factory
 
-import "github.com/tomocy/kibidango"
+import (
+	"github.com/tomocy/kibidango"
+)
 
 func ForLinux() *Linux {
 	return new(Linux)
@@ -37,10 +39,5 @@ func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 }
 
 func (l *Linux) adapt(state *state) (*kibidango.Linux, error) {
-	kibi := new(kibidango.Linux)
-	if err := kibi.UpdateID(state.ID); err != nil {
-		return nil, err
-	}
-
-	return kibi, nil
+	return kibidango.ForLinux(state.ID)
 }
