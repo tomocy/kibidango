@@ -37,17 +37,6 @@ func (l *Linux) Manufacture(id string) (*kibidango.Linux, error) {
 	return kibidango.ForLinux(id)
 }
 
-func (l *Linux) Save(kibi *kibidango.Linux) error {
-	state := l.convert(kibi)
-	return save(state)
-}
-
-func (l *Linux) convert(kibi *kibidango.Linux) *state {
-	return &state{
-		ID: kibi.ID(),
-	}
-}
-
 func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 	state, err := load(id)
 	if err != nil {
@@ -59,4 +48,15 @@ func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 
 func (l *Linux) adapt(state *state) (*kibidango.Linux, error) {
 	return kibidango.ForLinux(state.ID)
+}
+
+func (l *Linux) Save(kibi *kibidango.Linux) error {
+	state := l.convert(kibi)
+	return save(state)
+}
+
+func (l *Linux) convert(kibi *kibidango.Linux) *state {
+	return &state{
+		ID: kibi.ID(),
+	}
 }
