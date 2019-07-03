@@ -30,3 +30,8 @@ func (k *kibidango) UpdateRoot(root string) error {
 	k.root = root
 	return nil
 }
+
+func (k *kibidango) UpdateProcess(proc *Process) error {
+	k.process = proc
+	return nil
+}
