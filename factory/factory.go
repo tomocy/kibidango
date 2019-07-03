@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/tomocy/kibidango"
 )
 
 func list() ([]*state, error) {
@@ -72,7 +74,8 @@ func save(state *state) error {
 }
 
 type state struct {
-	ID string
+	ID      string
+	Process *kibidango.Process
 }
 
 func delete(id string) error {
