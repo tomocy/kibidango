@@ -33,10 +33,10 @@ func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 		return nil, err
 	}
 
-	return l.adaptToKibidango(state)
+	return l.adapt(state)
 }
 
-func (l *Linux) adaptToKibidango(state *state) (*kibidango.Linux, error) {
+func (l *Linux) adapt(state *state) (*kibidango.Linux, error) {
 	kibi := new(kibidango.Linux)
 	if err := kibi.UpdateID(state.ID); err != nil {
 		return nil, err
