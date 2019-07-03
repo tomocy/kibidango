@@ -20,3 +20,8 @@ func (k *kibidango) UpdateID(id string) error {
 
 	return nil
 }
+
+func (k *kibidango) UpdateRoot(root string) error {
+	k.root = root
+	return nil
+}

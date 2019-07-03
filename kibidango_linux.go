@@ -15,6 +15,9 @@ func ForLinux(id string) (*Linux, error) {
 	if err := kibi.UpdateID(id); err != nil {
 		return nil, err
 	}
+	if err := kibi.UpdateRoot("/root/kibidangos"); err != nil {
+		return nil, err
+	}
 
 	return &Linux{
 		kibidango: kibi,
