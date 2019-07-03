@@ -17,11 +17,11 @@ func (l *Linux) Manufacture(id string) (*kibidango.Linux, error) {
 }
 
 func (l *Linux) Save(kibi *kibidango.Linux) error {
-	state := l.convertToState(kibi)
+	state := l.convert(kibi)
 	return save(state)
 }
 
-func (l *Linux) convertToState(kibi *kibidango.Linux) *state {
+func (l *Linux) convert(kibi *kibidango.Linux) *state {
 	return &state{
 		ID: kibi.ID(),
 	}
