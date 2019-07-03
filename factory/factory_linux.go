@@ -57,7 +57,8 @@ func (l *Linux) Save(kibi *kibidango.Linux) error {
 
 func (l *Linux) convert(kibi *kibidango.Linux) *state {
 	return &state{
-		ID: kibi.ID(),
+		ID:      kibi.ID(),
+		Process: kibi.Process(),
 	}
 }
 
