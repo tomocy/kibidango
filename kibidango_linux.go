@@ -8,7 +8,7 @@ import (
 
 func ForLinux(id string) (*Linux, error) {
 	kibi := new(kibidango)
-	if err := kibi.updateID(id); err != nil {
+	if err := kibi.UpdateID(id); err != nil {
 		return nil, err
 	}
 

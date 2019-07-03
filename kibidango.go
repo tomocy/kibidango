@@ -10,7 +10,7 @@ func (k *kibidango) ID() string {
 	return k.id
 }
 
-func (k *kibidango) updateID(id string) error {
+func (k *kibidango) UpdateID(id string) error {
 	if id == "" {
 		return errors.New("id should not be empty")
 	}
