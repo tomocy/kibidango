@@ -1,35 +1,69 @@
-package initializer
+package kibidango
 
 import (
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"syscall"
 )
 
-const (
-	cfsQuotaUS = 5000
-)
-
-var (
-	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/cat", "/bin/date"}
-	libs = []string{"/lib/ld-musl-x86_64.so.1"}
-)
-
-func ForLinux(root string) *Linux {
-	return &Linux{
-		root: root,
+func ForLinux(id string) (*Linux, error) {
+	kibi := new(kibidango)
+	if err := kibi.UpdateID(id); err != nil {
+		return nil, err
 	}
+	if err := kibi.UpdateRoot("/root/kibidangos"); err != nil {
+		return nil, err
+	}
+
+	return &Linux{
+		kibidango: kibi,
+	}, nil
 }
 
 type Linux struct {
-	root string
+	*kibidango
+}
+
+func (l *Linux) Run(args ...string) error {
+	return l.clone(args...)
+}
+
+func (l *Linux) clone(args ...string) error {
+	cmd := l.buildCloneCommand(args...)
+	return cmd.Run()
+}
+
+func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
+	cmd := exec.Command("/proc/self/exe", args...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags: syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET | syscall.CLONE_NEWNS |
+			syscall.CLONE_NEWPID | syscall.CLONE_NEWUSER | syscall.CLONE_NEWUTS,
+		UidMappings: []syscall.SysProcIDMap{
+			{
+				ContainerID: 0,
+				HostID:      os.Getuid(),
+				Size:        1,
+			},
+		},
+		GidMappings: []syscall.SysProcIDMap{
+			{
+				ContainerID: 0,
+				HostID:      os.Getuid(),
+				Size:        1,
+			},
+		},
+	}
+	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
+
+	return cmd
 }
 
 func (l *Linux) Init() error {
-	if err := syscall.Sethostname([]byte("container")); err != nil {
+	if err := syscall.Sethostname([]byte(l.id)); err != nil {
 		return err
 	}
 	if err := l.limit(); err != nil {
@@ -47,6 +81,11 @@ func (l *Linux) Init() error {
 
 	return nil
 }
+
+var (
+	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/cat", "/bin/date"}
+	libs = []string{"/lib/ld-musl-x86_64.so.1"}
+)
 
 func (l *Linux) limit() error {
 	if err := l.limitCPUUsage(); err != nil {
@@ -77,6 +116,10 @@ func (l *Linux) limitCPUUsage() error {
 
 	return nil
 }
+
+const (
+	cfsQuotaUS = 5000
+)
 
 func (l *Linux) enable(bins []string, libs ...string) error {
 	if 1 <= len(libs) {
