@@ -75,6 +75,11 @@ type state struct {
 	ID string
 }
 
+func delete(id string) error {
+	name := filepath.Join(workSpacesDir, id)
+	return os.RemoveAll(name)
+}
+
 const (
 	workSpacesDir = "/run/kibidango"
 )
