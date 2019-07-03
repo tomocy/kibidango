@@ -3,7 +3,8 @@ package kibidango
 import "errors"
 
 type kibidango struct {
-	id string
+	id   string
+	root string
 }
 
 func (k *kibidango) ID() string {
