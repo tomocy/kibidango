@@ -60,3 +60,7 @@ func (l *Linux) convert(kibi *kibidango.Linux) *state {
 		ID: kibi.ID(),
 	}
 }
+
+func (l *Linux) Delete(id string) error {
+	return delete(id)
+}
