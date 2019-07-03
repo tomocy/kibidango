@@ -10,6 +10,25 @@ func ForLinux() *Linux {
 
 type Linux struct{}
 
+func (l *Linux) List() ([]*kibidango.Linux, error) {
+	states, err := list()
+	if err != nil {
+		return nil, err
+	}
+
+	kibis := make([]*kibidango.Linux, len(states))
+	for i, state := range states {
+		kibi, err := l.adapt(state)
+		if err != nil {
+			return nil, err
+		}
+
+		kibis[i] = kibi
+	}
+
+	return kibis, nil
+}
+
 func (l *Linux) Manufacture(id string) (*kibidango.Linux, error) {
 	if err := createWorkspace(id); err != nil {
 		return nil, err
