@@ -16,6 +16,10 @@ func (k *kibidango) ID() string {
 	return k.id
 }
 
+func (k *kibidango) Process() *Process {
+	return k.process
+}
+
 func (k *kibidango) UpdateID(id string) error {
 	if id == "" {
 		return errors.New("id should not be empty")
