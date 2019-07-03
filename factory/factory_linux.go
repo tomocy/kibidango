@@ -26,3 +26,21 @@ func (l *Linux) convertToState(kibi *kibidango.Linux) *state {
 		ID: kibi.ID(),
 	}
 }
+
+func (l *Linux) Load(id string) (*kibidango.Linux, error) {
+	state, err := load(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return l.adaptToKibidango(state)
+}
+
+func (l *Linux) adaptToKibidango(state *state) (*kibidango.Linux, error) {
+	kibi := new(kibidango.Linux)
+	if err := kibi.UpdateID(state.ID); err != nil {
+		return nil, err
+	}
+
+	return kibi, nil
+}

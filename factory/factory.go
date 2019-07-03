@@ -22,6 +22,22 @@ func save(state *state) error {
 	return json.NewEncoder(dest).Encode(state)
 }
 
+func load(id string) (*state, error) {
+	name := filepath.Join(workSpacesDir, id, "state.json")
+	src, err := os.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	var state *state
+	if err := json.NewDecoder(src).Decode(&state); err != nil {
+		return nil, err
+	}
+
+	return state, nil
+}
+
 type state struct {
 	ID string
 }
