@@ -51,15 +51,8 @@ func (l *Linux) adapt(spec *kibidango.Spec) (*kibidango.Linux, error) {
 }
 
 func (l *Linux) Save(kibi *kibidango.Linux) error {
-	state := l.convert(kibi)
-	return save(state)
-}
-
-func (l *Linux) convert(kibi *kibidango.Linux) *kibidango.Spec {
-	return &kibidango.Spec{
-		ID:      kibi.ID(),
-		Process: kibi.Process(),
-	}
+	spec := kibi.Spec()
+	return save(spec)
 }
 
 func (l *Linux) Delete(id string) error {
