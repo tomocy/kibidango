@@ -10,6 +10,7 @@ type kibidango struct {
 
 type Spec struct {
 	ID      string
+	Root    string
 	Process *Process
 }
 
@@ -34,6 +35,9 @@ func (k *kibidango) Process() *Process {
 
 func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.UpdateID(spec.ID); err != nil {
+		return err
+	}
+	if err := k.UpdateRoot(spec.Root); err != nil {
 		return err
 	}
 	if err := k.UpdateProcess(spec.Process); err != nil {
