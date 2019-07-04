@@ -29,12 +29,12 @@ func (l *Linux) List() ([]*kibidango.Linux, error) {
 	return kibis, nil
 }
 
-func (l *Linux) Manufacture(id string) (*kibidango.Linux, error) {
-	if err := createWorkspace(id); err != nil {
+func (l *Linux) Manufacture(spec *kibidango.Spec) (*kibidango.Linux, error) {
+	if err := createWorkspace(spec.ID); err != nil {
 		return nil, err
 	}
 
-	return kibidango.ForLinux(id)
+	return kibidango.ForLinux(spec)
 }
 
 func (l *Linux) Load(id string) (*kibidango.Linux, error) {
@@ -47,7 +47,10 @@ func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 }
 
 func (l *Linux) adapt(state *state) (*kibidango.Linux, error) {
-	return kibidango.ForLinux(state.ID)
+	return kibidango.ForLinux(&kibidango.Spec{
+		ID:      state.ID,
+		Process: state.Process,
+	})
 }
 
 func (l *Linux) Save(kibi *kibidango.Linux) error {

@@ -10,12 +10,9 @@ import (
 	"syscall"
 )
 
-func ForLinux(id string) (*Linux, error) {
+func ForLinux(spec *Spec) (*Linux, error) {
 	kibi := new(kibidango)
-	if err := kibi.UpdateID(id); err != nil {
-		return nil, err
-	}
-	if err := kibi.UpdateRoot("/root/kibidangos"); err != nil {
+	if err := kibi.Meet(spec); err != nil {
 		return nil, err
 	}
 
