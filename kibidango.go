@@ -25,6 +25,17 @@ func (k *kibidango) Process() *Process {
 	return k.process
 }
 
+func (k *kibidango) Meet(spec *Spec) error {
+	if err := k.UpdateID(spec.ID); err != nil {
+		return err
+	}
+	if err := k.UpdateProcess(spec.Process); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (k *kibidango) UpdateID(id string) error {
 	if id == "" {
 		return errors.New("id should not be empty")
