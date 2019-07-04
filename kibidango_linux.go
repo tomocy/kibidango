@@ -26,7 +26,7 @@ type Linux struct {
 
 func (l *Linux) Run(args ...string) error {
 	if err := l.clone(args...); err != nil {
-		return reportErr("run", err)
+		return report("run", err)
 	}
 
 	return nil
@@ -67,16 +67,16 @@ func (l *Linux) Init() error {
 		return err
 	}
 	if err := l.limit(); err != nil {
-		return reportErr("limit", err)
+		return report("limit", err)
 	}
 	if err := l.enable(bins, libs...); err != nil {
-		return reportErr("enable", err)
+		return report("enable", err)
 	}
 	if err := l.mountProcs(); err != nil {
-		return reportErr("mount procs", err)
+		return report("mount procs", err)
 	}
 	if err := l.pivotRoot(); err != nil {
-		return reportErr("pivot root", err)
+		return report("pivot root", err)
 	}
 
 	return nil
@@ -89,7 +89,7 @@ var (
 
 func (l *Linux) limit() error {
 	if err := l.limitCPUUsage(); err != nil {
-		return reportErr("limit cpu usage", err)
+		return report("limit cpu usage", err)
 	}
 
 	return nil
@@ -124,7 +124,7 @@ const (
 func (l *Linux) enable(bins []string, libs ...string) error {
 	if 1 <= len(libs) {
 		if err := l.ensure(libs); err != nil {
-			return reportErr("ensure", err)
+			return report("ensure", err)
 		}
 	}
 
@@ -134,7 +134,7 @@ func (l *Linux) enable(bins []string, libs ...string) error {
 
 	for _, bin := range bins {
 		if err := copyFile(bin, l.joinRoot(bin)); err != nil {
-			return reportErr("copy file", err)
+			return report("copy file", err)
 		}
 	}
 
@@ -148,7 +148,7 @@ func (l *Linux) ensure(libs []string) error {
 
 	for _, lib := range libs {
 		if err := copyFile(lib, l.joinRoot(lib)); err != nil {
-			return reportErr("copy file", err)
+			return report("copy file", err)
 		}
 	}
 
