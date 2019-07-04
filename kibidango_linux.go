@@ -14,7 +14,7 @@ import (
 func ForLinux(spec *Spec) (*Linux, error) {
 	kibi := new(kibidango)
 	if err := kibi.Meet(spec); err != nil {
-		return nil, err
+		return nil, errorPkg.Report("new for linux", err)
 	}
 
 	return &Linux{
@@ -66,19 +66,19 @@ func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 
 func (l *Linux) Init() error {
 	if err := syscall.Sethostname([]byte(l.id)); err != nil {
-		return err
+		return errorPkg.Report("init", err)
 	}
 	if err := l.limit(); err != nil {
-		return errorPkg.Report("limit", err)
+		return errorPkg.Report("init", err)
 	}
 	if err := l.enable(bins, libs...); err != nil {
-		return errorPkg.Report("enable", err)
+		return errorPkg.Report("init", err)
 	}
 	if err := l.mountProcs(); err != nil {
-		return errorPkg.Report("mount procs", err)
+		return errorPkg.Report("init", err)
 	}
 	if err := l.pivotRoot(); err != nil {
-		return errorPkg.Report("pivot root", err)
+		return errorPkg.Report("init", err)
 	}
 
 	return nil
