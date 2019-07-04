@@ -3,6 +3,8 @@ package kibidango
 import (
 	"errors"
 	"path/filepath"
+
+	errorPkg "github.com/tomocy/kibidango/error"
 )
 
 type kibidango struct {
@@ -31,13 +33,13 @@ func (k *kibidango) Spec() *Spec {
 
 func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.updateID(spec.ID); err != nil {
-		return err
+		return errorPkg.Report("meet", err)
 	}
 	if err := k.updateRoot(spec.Root); err != nil {
-		return err
+		return errorPkg.Report("meet", err)
 	}
 	if err := k.updateProcess(spec.Process); err != nil {
-		return err
+		return errorPkg.Report("meet", err)
 	}
 
 	return nil
