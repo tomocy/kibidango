@@ -25,7 +25,11 @@ type Linux struct {
 }
 
 func (l *Linux) Run(args ...string) error {
-	return l.clone(args...)
+	if err := l.clone(args...); err != nil {
+		return reportErr("run", err)
+	}
+
+	return nil
 }
 
 func (l *Linux) clone(args ...string) error {
