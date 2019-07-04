@@ -2,6 +2,7 @@ package factory
 
 import (
 	"github.com/tomocy/kibidango"
+	errorPkg "github.com/tomocy/kibidango/error"
 )
 
 func ForLinux() *Linux {
@@ -13,14 +14,14 @@ type Linux struct{}
 func (l *Linux) List() ([]*kibidango.Linux, error) {
 	states, err := list()
 	if err != nil {
-		return nil, err
+		return nil, errorPkg.Report("list", err)
 	}
 
 	kibis := make([]*kibidango.Linux, len(states))
 	for i, state := range states {
 		kibi, err := l.adapt(state)
 		if err != nil {
-			return nil, err
+			return nil, errorPkg.Report("list", err)
 		}
 
 		kibis[i] = kibi
@@ -31,19 +32,29 @@ func (l *Linux) List() ([]*kibidango.Linux, error) {
 
 func (l *Linux) Manufacture(spec *kibidango.Spec) (*kibidango.Linux, error) {
 	if err := createWorkspace(spec.ID); err != nil {
-		return nil, err
+		return nil, errorPkg.Report("manufacture", err)
 	}
 
-	return kibidango.ForLinux(spec)
+	kibi, err := kibidango.ForLinux(spec)
+	if err != nil {
+		return nil, errorPkg.Report("manufacture", err)
+	}
+
+	return kibi, nil
 }
 
 func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 	state, err := load(id)
 	if err != nil {
-		return nil, err
+		return nil, errorPkg.Report("load", err)
 	}
 
-	return l.adapt(state)
+	kibi, err := l.adapt(state)
+	if err != nil {
+		return nil, errorPkg.Report("load", err)
+	}
+
+	return kibi, nil
 }
 
 func (l *Linux) adapt(spec *kibidango.Spec) (*kibidango.Linux, error) {
@@ -52,9 +63,17 @@ func (l *Linux) adapt(spec *kibidango.Spec) (*kibidango.Linux, error) {
 
 func (l *Linux) Save(kibi *kibidango.Linux) error {
 	spec := kibi.Spec()
-	return save(spec)
+	if err := save(spec); err != nil {
+		return errorPkg.Report("save", err)
+	}
+
+	return nil
 }
 
 func (l *Linux) Delete(id string) error {
-	return delete(id)
+	if err := delete(id); err != nil {
+		return errorPkg.Report("delete", err)
+	}
+
+	return nil
 }
