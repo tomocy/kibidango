@@ -9,27 +9,27 @@ import (
 	"github.com/tomocy/kibidango"
 )
 
-func list() ([]*state, error) {
+func list() ([]*kibidango.Spec, error) {
 	srces, err := read(workSpacesDir)
 	if err != nil {
 		return nil, err
 	}
 
-	states := make([]*state, len(srces))
+	specs := make([]*kibidango.Spec, len(srces))
 	for i, src := range srces {
 		if !src.IsDir() {
 			continue
 		}
 
-		state, err := load(src.Name())
+		spec, err := load(src.Name())
 		if err != nil {
 			return nil, err
 		}
 
-		states[i] = state
+		specs[i] = spec
 	}
 
-	return states, nil
+	return specs, nil
 }
 
 func read(dir string) ([]os.FileInfo, error) {
@@ -41,20 +41,20 @@ func read(dir string) ([]os.FileInfo, error) {
 	return ioutil.ReadDir(dir)
 }
 
-func load(id string) (*state, error) {
-	name := filepath.Join(workSpacesDir, id, "state.json")
+func load(id string) (*kibidango.Spec, error) {
+	name := filepath.Join(workSpacesDir, id, "spec.json")
 	src, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
 	defer src.Close()
 
-	var state *state
-	if err := json.NewDecoder(src).Decode(&state); err != nil {
+	var spec *kibidango.Spec
+	if err := json.NewDecoder(src).Decode(&spec); err != nil {
 		return nil, err
 	}
 
-	return state, nil
+	return spec, nil
 }
 
 func createWorkspace(id string) error {
@@ -62,20 +62,15 @@ func createWorkspace(id string) error {
 	return os.MkdirAll(dir, 0777)
 }
 
-func save(state *state) error {
-	name := filepath.Join(workSpacesDir, state.ID, "state.json")
+func save(spec *kibidango.Spec) error {
+	name := filepath.Join(workSpacesDir, spec.ID, "state.json")
 	dest, err := os.OpenFile(name, os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
 		return err
 	}
 	defer dest.Close()
 
-	return json.NewEncoder(dest).Encode(state)
-}
-
-type state struct {
-	ID      string
-	Process *kibidango.Process
+	return json.NewEncoder(dest).Encode(spec)
 }
 
 func delete(id string) error {

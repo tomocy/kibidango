@@ -46,11 +46,8 @@ func (l *Linux) Load(id string) (*kibidango.Linux, error) {
 	return l.adapt(state)
 }
 
-func (l *Linux) adapt(state *state) (*kibidango.Linux, error) {
-	return kibidango.ForLinux(&kibidango.Spec{
-		ID:      state.ID,
-		Process: state.Process,
-	})
+func (l *Linux) adapt(spec *kibidango.Spec) (*kibidango.Linux, error) {
+	return kibidango.ForLinux(spec)
 }
 
 func (l *Linux) Save(kibi *kibidango.Linux) error {
@@ -58,8 +55,8 @@ func (l *Linux) Save(kibi *kibidango.Linux) error {
 	return save(state)
 }
 
-func (l *Linux) convert(kibi *kibidango.Linux) *state {
-	return &state{
+func (l *Linux) convert(kibi *kibidango.Linux) *kibidango.Spec {
+	return &kibidango.Spec{
 		ID:      kibi.ID(),
 		Process: kibi.Process(),
 	}
