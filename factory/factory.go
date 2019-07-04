@@ -42,7 +42,7 @@ func read(dir string) ([]os.FileInfo, error) {
 }
 
 func load(id string) (*kibidango.Spec, error) {
-	name := filepath.Join(workSpacesDir, id, "spec.json")
+	name := filepath.Join(workspace(id), "spec.json")
 	src, err := os.Open(name)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func load(id string) (*kibidango.Spec, error) {
 }
 
 func createWorkspace(id string) error {
-	dir := filepath.Join(workSpacesDir, id)
+	dir := workspace(id)
 	if err := os.MkdirAll(dir, 0777); err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func createSpecFile(dir string) error {
 }
 
 func save(spec *kibidango.Spec) error {
-	name := filepath.Join(workSpacesDir, spec.ID, "spec.json")
+	name := filepath.Join(workspace(spec.ID), "spec.json")
 	dest, err := os.OpenFile(name, os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
 		return err
@@ -88,8 +88,12 @@ func save(spec *kibidango.Spec) error {
 }
 
 func delete(id string) error {
-	name := filepath.Join(workSpacesDir, id)
+	name := workspace(id)
 	return os.RemoveAll(name)
+}
+
+func workspace(id string) string {
+	return filepath.Join(workSpacesDir, id)
 }
 
 const (
