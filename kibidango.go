@@ -29,7 +29,7 @@ func (k *kibidango) Spec() *Spec {
 }
 
 func (k *kibidango) Meet(spec *Spec) error {
-	if err := k.UpdateID(spec.ID); err != nil {
+	if err := k.updateID(spec.ID); err != nil {
 		return err
 	}
 	if err := k.UpdateRoot(spec.Root); err != nil {
@@ -42,7 +42,7 @@ func (k *kibidango) Meet(spec *Spec) error {
 	return nil
 }
 
-func (k *kibidango) UpdateID(id string) error {
+func (k *kibidango) updateID(id string) error {
 	if id == "" {
 		return errors.New("id should not be empty")
 	}
