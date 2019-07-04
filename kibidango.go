@@ -35,7 +35,7 @@ func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.updateRoot(spec.Root); err != nil {
 		return err
 	}
-	if err := k.UpdateProcess(spec.Process); err != nil {
+	if err := k.updateProcess(spec.Process); err != nil {
 		return err
 	}
 
@@ -57,7 +57,7 @@ func (k *kibidango) updateRoot(root string) error {
 	return nil
 }
 
-func (k *kibidango) UpdateProcess(proc *Process) error {
+func (k *kibidango) updateProcess(proc *Process) error {
 	k.process = proc
 	return nil
 }
