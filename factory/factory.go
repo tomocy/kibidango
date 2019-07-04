@@ -78,7 +78,7 @@ func createSpecFile(id string) error {
 
 func save(spec *kibidango.Spec) error {
 	name := specFilename(spec.ID)
-	dest, err := os.OpenFile(name, os.O_CREATE|os.O_RDWR, 0777)
+	dest, err := os.OpenFile(name, os.O_WRONLY, 0777)
 	if err != nil {
 		return err
 	}
