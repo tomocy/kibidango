@@ -204,7 +204,3 @@ func (l *Linux) pivotRoot() error {
 
 	return nil
 }
-
-func reportErr(did string, err error) error {
-	return fmt.Errorf("failed to %s; %s", did, err)
-}
