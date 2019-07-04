@@ -17,6 +17,13 @@ type Process struct {
 	Args []string
 }
 
+func (k *kibidango) Spec() *Spec {
+	return &Spec{
+		ID:      k.id,
+		Process: k.process,
+	}
+}
+
 func (k *kibidango) ID() string {
 	return k.id
 }
