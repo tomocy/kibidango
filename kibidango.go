@@ -28,10 +28,6 @@ func (k *kibidango) Spec() *Spec {
 	}
 }
 
-func (k *kibidango) ID() string {
-	return k.id
-}
-
 func (k *kibidango) Process() *Process {
 	return k.process
 }
