@@ -32,7 +32,7 @@ func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.updateID(spec.ID); err != nil {
 		return err
 	}
-	if err := k.UpdateRoot(spec.Root); err != nil {
+	if err := k.updateRoot(spec.Root); err != nil {
 		return err
 	}
 	if err := k.UpdateProcess(spec.Process); err != nil {
@@ -52,7 +52,7 @@ func (k *kibidango) updateID(id string) error {
 	return nil
 }
 
-func (k *kibidango) UpdateRoot(root string) error {
+func (k *kibidango) updateRoot(root string) error {
 	k.root = root
 	return nil
 }
