@@ -8,6 +8,11 @@ type kibidango struct {
 	process *Process
 }
 
+type Spec struct {
+	ID      string
+	Process *Process
+}
+
 type Process struct {
 	Args []string
 }
