@@ -2,6 +2,7 @@ package kibidango
 
 import (
 	"errors"
+	"path/filepath"
 )
 
 type kibidango struct {
@@ -60,4 +61,8 @@ func (k *kibidango) updateRoot(root string) error {
 func (k *kibidango) updateProcess(proc *Process) error {
 	k.process = proc
 	return nil
+}
+
+func (k *kibidango) joinRoot(path string) string {
+	return filepath.Join(k.root, path)
 }

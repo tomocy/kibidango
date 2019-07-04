@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"syscall"
 )
 
@@ -204,10 +203,6 @@ func (l *Linux) pivotRoot() error {
 	}
 
 	return nil
-}
-
-func (l *Linux) joinRoot(path string) string {
-	return filepath.Join(l.root, path)
 }
 
 func reportErr(did string, err error) error {
