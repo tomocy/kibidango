@@ -63,7 +63,7 @@ func createWorkspace(id string) error {
 }
 
 func save(spec *kibidango.Spec) error {
-	name := filepath.Join(workSpacesDir, spec.ID, "state.json")
+	name := filepath.Join(workSpacesDir, spec.ID, "spec.json")
 	dest, err := os.OpenFile(name, os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
 		return err
