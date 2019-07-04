@@ -2,7 +2,6 @@ package kibidango
 
 import (
 	"errors"
-	"fmt"
 	"path/filepath"
 )
 
@@ -66,8 +65,4 @@ func (k *kibidango) updateProcess(proc *Process) error {
 
 func (k *kibidango) joinRoot(path string) string {
 	return filepath.Join(k.root, path)
-}
-
-func report(did string, err error) error {
-	return fmt.Errorf("failed to %s; %s", did, err)
 }

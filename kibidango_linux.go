@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+
+	errorPkg "github.com/tomocy/kibidango/error"
 )
 
 func ForLinux(spec *Spec) (*Linux, error) {
@@ -26,7 +28,7 @@ type Linux struct {
 
 func (l *Linux) Run(args ...string) error {
 	if err := l.clone(args...); err != nil {
-		return report("run", err)
+		return errorPkg.Report("run", err)
 	}
 
 	return nil
@@ -67,16 +69,16 @@ func (l *Linux) Init() error {
 		return err
 	}
 	if err := l.limit(); err != nil {
-		return report("limit", err)
+		return errorPkg.Report("limit", err)
 	}
 	if err := l.enable(bins, libs...); err != nil {
-		return report("enable", err)
+		return errorPkg.Report("enable", err)
 	}
 	if err := l.mountProcs(); err != nil {
-		return report("mount procs", err)
+		return errorPkg.Report("mount procs", err)
 	}
 	if err := l.pivotRoot(); err != nil {
-		return report("pivot root", err)
+		return errorPkg.Report("pivot root", err)
 	}
 
 	return nil
@@ -89,7 +91,7 @@ var (
 
 func (l *Linux) limit() error {
 	if err := l.limitCPUUsage(); err != nil {
-		return report("limit cpu usage", err)
+		return errorPkg.Report("limit cpu usage", err)
 	}
 
 	return nil
@@ -124,7 +126,7 @@ const (
 func (l *Linux) enable(bins []string, libs ...string) error {
 	if 1 <= len(libs) {
 		if err := l.ensure(libs); err != nil {
-			return report("ensure", err)
+			return errorPkg.Report("ensure", err)
 		}
 	}
 
@@ -134,7 +136,7 @@ func (l *Linux) enable(bins []string, libs ...string) error {
 
 	for _, bin := range bins {
 		if err := copyFile(bin, l.joinRoot(bin)); err != nil {
-			return report("copy file", err)
+			return errorPkg.Report("copy file", err)
 		}
 	}
 
@@ -148,7 +150,7 @@ func (l *Linux) ensure(libs []string) error {
 
 	for _, lib := range libs {
 		if err := copyFile(lib, l.joinRoot(lib)); err != nil {
-			return report("copy file", err)
+			return errorPkg.Report("copy file", err)
 		}
 	}
 
