@@ -91,7 +91,7 @@ var (
 
 func (l *Linux) limit() error {
 	if err := l.limitCPUUsage(); err != nil {
-		return errorPkg.Report("limit cpu usage", err)
+		return err
 	}
 
 	return nil
@@ -126,7 +126,7 @@ const (
 func (l *Linux) enable(bins []string, libs ...string) error {
 	if 1 <= len(libs) {
 		if err := l.ensure(libs); err != nil {
-			return errorPkg.Report("ensure", err)
+			return err
 		}
 	}
 
@@ -136,7 +136,7 @@ func (l *Linux) enable(bins []string, libs ...string) error {
 
 	for _, bin := range bins {
 		if err := copyFile(bin, l.joinRoot(bin)); err != nil {
-			return errorPkg.Report("copy file", err)
+			return err
 		}
 	}
 
@@ -150,7 +150,7 @@ func (l *Linux) ensure(libs []string) error {
 
 	for _, lib := range libs {
 		if err := copyFile(lib, l.joinRoot(lib)); err != nil {
-			return errorPkg.Report("copy file", err)
+			return err
 		}
 	}
 
