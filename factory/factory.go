@@ -59,7 +59,21 @@ func load(id string) (*kibidango.Spec, error) {
 
 func createWorkspace(id string) error {
 	dir := filepath.Join(workSpacesDir, id)
-	return os.MkdirAll(dir, 0777)
+	if err := os.MkdirAll(dir, 0777); err != nil {
+		return err
+	}
+
+	return createSpecFile(dir)
+}
+
+func createSpecFile(dir string) error {
+	name := filepath.Join(dir, "spec.json")
+	file, err := os.Create(name)
+	if err != nil {
+		return err
+	}
+
+	return file.Close()
 }
 
 func save(spec *kibidango.Spec) error {
