@@ -1,6 +1,8 @@
 package kibidango
 
-import "errors"
+import (
+	"errors"
+)
 
 type kibidango struct {
 	id      string
@@ -21,6 +23,7 @@ type Process struct {
 func (k *kibidango) Spec() *Spec {
 	return &Spec{
 		ID:      k.id,
+		Root:    k.root,
 		Process: k.process,
 	}
 }
