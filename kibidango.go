@@ -28,10 +28,6 @@ func (k *kibidango) Spec() *Spec {
 	}
 }
 
-func (k *kibidango) Process() *Process {
-	return k.process
-}
-
 func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.UpdateID(spec.ID); err != nil {
 		return err
