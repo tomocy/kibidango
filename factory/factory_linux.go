@@ -41,6 +41,10 @@ func (l *Linux) Manufacture(spec *kibidango.Spec) (*kibidango.Linux, error) {
 		return nil, errorPkg.Report("manufacture", err)
 	}
 
+	if err := l.tellPipeFD(kibi); err != nil {
+		return nil, errorPkg.Report("manufacture", err)
+	}
+
 	return kibi, nil
 }
 
@@ -55,6 +59,16 @@ func (l *Linux) createWorkspace(id string) error {
 func (l *Linux) createPipeFile(id string) error {
 	name := pipeFilename(id)
 	return unix.Mkfifo(name, 0777)
+}
+
+func (l *Linux) tellPipeFD(kibi *kibidango.Linux) error {
+	name := pipeFilename(kibi.Spec().ID)
+	fd, err := unix.Open(name, unix.O_RDONLY|unix.O_NONBLOCK, 0777)
+	if err != nil {
+		return err
+	}
+
+	return kibi.UpdatePipeFD(fd)
 }
 
 func (l *Linux) Load(id string) (*kibidango.Linux, error) {
