@@ -91,3 +91,13 @@ func (k *kibidango) writePipe() error {
 
 	return pipe.Close()
 }
+
+func (k *kibidango) readPipe() error {
+	name := fmt.Sprintf("/proc/self/fd/%d", k.pipeFD)
+	pipe, err := os.Open(name)
+	if err != nil {
+		return err
+	}
+
+	return pipe.Close()
+}
