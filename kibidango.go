@@ -68,6 +68,11 @@ func (k *kibidango) updateProcess(proc *Process) error {
 	return nil
 }
 
+func (k *kibidango) UpdatePipeFD(fd int) error {
+	k.pipeFD = fd
+	return nil
+}
+
 func (k *kibidango) joinRoot(path string) string {
 	return filepath.Join(k.root, path)
 }
