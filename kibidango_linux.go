@@ -27,11 +27,25 @@ type Linux struct {
 }
 
 func (l *Linux) Run(args ...string) error {
-	if err := l.clone(args...); err != nil {
+	var err error
+	select {
+	case err = <-l.cloneAsyncly(args...):
+	case err = <-l.waitReadyToExec():
+	}
+	if err != nil {
 		return errorPkg.Report("run", err)
 	}
 
 	return nil
+}
+
+func (l *Linux) cloneAsyncly(args ...string) <-chan error {
+	ch := make(chan error)
+	go func() {
+		ch <- l.clone(args...)
+	}()
+
+	return ch
 }
 
 func (l *Linux) clone(args ...string) error {
@@ -64,6 +78,15 @@ func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 	return cmd
 }
 
+func (l *Linux) waitReadyToExec() <-chan error {
+	ch := make(chan error)
+	go func() {
+		ch <- l.readPipe()
+	}()
+
+	return ch
+}
+
 func (l *Linux) Init() error {
 	if err := syscall.Sethostname([]byte(l.id)); err != nil {
 		return errorPkg.Report("init", err)
@@ -78,6 +101,9 @@ func (l *Linux) Init() error {
 		return errorPkg.Report("init", err)
 	}
 	if err := l.pivotRoot(); err != nil {
+		return errorPkg.Report("init", err)
+	}
+	if err := <-l.waitToExec(); err != nil {
 		return errorPkg.Report("init", err)
 	}
 
@@ -209,4 +235,18 @@ func (l *Linux) pivotRoot() error {
 	}
 
 	return nil
+}
+
+func (l *Linux) waitToExec() <-chan error {
+	ch := make(chan error)
+	go func() {
+		if err := l.writePipe(); err != nil {
+			ch <- err
+			return
+		}
+
+		ch <- l.readPipe()
+	}()
+
+	return ch
 }
