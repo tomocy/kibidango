@@ -11,12 +11,14 @@ type kibidango struct {
 	id      string
 	root    string
 	process *Process
+	pipeFD  int
 }
 
 type Spec struct {
 	ID      string
 	Root    string
 	Process *Process
+	PipeFD  int
 }
 
 type Process struct {
@@ -28,6 +30,7 @@ func (k *kibidango) Spec() *Spec {
 		ID:      k.id,
 		Root:    k.root,
 		Process: k.process,
+		PipeFD:  k.pipeFD,
 	}
 }
 
