@@ -44,6 +44,9 @@ func (k *kibidango) Meet(spec *Spec) error {
 	if err := k.updateProcess(spec.Process); err != nil {
 		return errorPkg.Report("meet", err)
 	}
+	if err := k.UpdatePipeFD(spec.PipeFD); err != nil {
+		return errorPkg.Report("meet", err)
+	}
 
 	return nil
 }
