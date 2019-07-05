@@ -2,6 +2,8 @@ package kibidango
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"path/filepath"
 
 	errorPkg "github.com/tomocy/kibidango/error"
@@ -78,4 +80,14 @@ func (k *kibidango) UpdatePipeFD(fd int) error {
 
 func (k *kibidango) joinRoot(path string) string {
 	return filepath.Join(k.root, path)
+}
+
+func (k *kibidango) writePipe() error {
+	name := fmt.Sprintf("/proc/self/fd/%d", k.pipeFD)
+	pipe, err := os.OpenFile(name, os.O_WRONLY, 0777)
+	if err != nil {
+		return err
+	}
+
+	return pipe.Close()
 }
