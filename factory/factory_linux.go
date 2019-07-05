@@ -3,6 +3,7 @@ package factory
 import (
 	"github.com/tomocy/kibidango"
 	errorPkg "github.com/tomocy/kibidango/error"
+	"golang.org/x/sys/unix"
 )
 
 func ForLinux() *Linux {
@@ -31,7 +32,7 @@ func (l *Linux) List() ([]*kibidango.Linux, error) {
 }
 
 func (l *Linux) Manufacture(spec *kibidango.Spec) (*kibidango.Linux, error) {
-	if err := createWorkspace(spec.ID); err != nil {
+	if err := l.createWorkspace(spec.ID); err != nil {
 		return nil, errorPkg.Report("manufacture", err)
 	}
 
@@ -41,6 +42,19 @@ func (l *Linux) Manufacture(spec *kibidango.Spec) (*kibidango.Linux, error) {
 	}
 
 	return kibi, nil
+}
+
+func (l *Linux) createWorkspace(id string) error {
+	if err := createWorkspace(id); err != nil {
+		return err
+	}
+
+	return l.createPipeFile(id)
+}
+
+func (l *Linux) createPipeFile(id string) error {
+	name := pipeFilename(id)
+	return unix.Mkfifo(name, 0777)
 }
 
 func (l *Linux) Load(id string) (*kibidango.Linux, error) {

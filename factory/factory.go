@@ -96,6 +96,10 @@ func specFilename(id string) string {
 	return filepath.Join(workspace(id), "spec.json")
 }
 
+func pipeFilename(id string) string {
+	return filepath.Join(workspace(id), "pipe.fifo")
+}
+
 func workspace(id string) string {
 	return filepath.Join(workSpacesDir, id)
 }
