@@ -24,6 +24,7 @@ type Spec struct {
 }
 
 type Process struct {
+	ID   int
 	Args []string
 }
 

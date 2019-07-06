@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"syscall"
 
+	"github.com/tomocy/deverr"
+
 	errorPkg "github.com/tomocy/kibidango/error"
 )
 
@@ -50,7 +52,12 @@ func (l *Linux) cloneAsyncly(args ...string) <-chan error {
 
 func (l *Linux) clone(args ...string) error {
 	cmd := l.buildCloneCommand(args...)
-	return cmd.Run()
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	l.process.ID = cmd.Process.Pid
+
+	return cmd.Wait()
 }
 
 func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
@@ -249,4 +256,8 @@ func (l *Linux) waitToExec() <-chan error {
 	}()
 
 	return ch
+}
+
+func (l *Linux) Exec() error {
+	return deverr.NotImplemented
 }
