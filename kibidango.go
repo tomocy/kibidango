@@ -84,7 +84,7 @@ func (k *kibidango) joinRoot(path string) string {
 }
 
 func (k *kibidango) writePipe() error {
-	name := fmt.Sprintf("/proc/self/fd/%d", k.pipeFD)
+	name := fmt.Sprintf("/proc/%s/fd/%d", k.pidOrSelf(), k.pipeFD)
 	pipe, err := os.OpenFile(name, os.O_WRONLY, 0777)
 	if err != nil {
 		return err
@@ -94,11 +94,20 @@ func (k *kibidango) writePipe() error {
 }
 
 func (k *kibidango) readPipe() error {
-	name := fmt.Sprintf("/proc/self/fd/%d", k.pipeFD)
+	name := fmt.Sprintf("/proc/%s/fd/%d", k.pidOrSelf(), k.pipeFD)
 	pipe, err := os.Open(name)
 	if err != nil {
 		return err
 	}
 
 	return pipe.Close()
+}
+
+func (k *kibidango) pidOrSelf() string {
+	pid := fmt.Sprintf("%d", k.process.ID)
+	if pid == "0" {
+		pid = "self"
+	}
+
+	return pid
 }
