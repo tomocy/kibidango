@@ -130,18 +130,18 @@ func (l *Linux) limit() error {
 }
 
 func (l *Linux) limitCPUUsage() error {
-	if err := os.MkdirAll("/sys/fs/cgroup/cpu/container", 0755); err != nil {
+	if err := os.MkdirAll("/sys/fs/cgroup/cpu/kibidango", 0755); err != nil {
 		return err
 	}
 	if err := ioutil.WriteFile(
-		"/sys/fs/cgroup/cpu/container/cpu.cfs_quota_us",
+		"/sys/fs/cgroup/cpu/kibidango/cpu.cfs_quota_us",
 		[]byte(fmt.Sprintf("%d", cfsQuotaUS)),
 		0755,
 	); err != nil {
 		return err
 	}
 	if err := ioutil.WriteFile(
-		"/sys/fs/cgroup/cpu/container/tasks",
+		"/sys/fs/cgroup/cpu/kibidnago/tasks",
 		[]byte(fmt.Sprintf("%d", os.Getpid())),
 		0755,
 	); err != nil {
