@@ -141,7 +141,7 @@ func (l *Linux) limitCPUUsage() error {
 		return err
 	}
 	if err := ioutil.WriteFile(
-		"/sys/fs/cgroup/cpu/kibidnago/tasks",
+		"/sys/fs/cgroup/cpu/kibidango/tasks",
 		[]byte(fmt.Sprintf("%d", os.Getpid())),
 		0755,
 	); err != nil {
