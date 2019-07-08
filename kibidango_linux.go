@@ -114,11 +114,11 @@ func (l *Linux) Init() error {
 		return errorPkg.Report("init", err)
 	}
 
-	return nil
+	return syscall.Exec(l.process.Args[0], l.process.Args, os.Environ())
 }
 
 var (
-	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/cat", "/bin/date"}
+	bins = []string{"/bin/sh", "/bin/ls", "/bin/ps", "/bin/cat", "/bin/date", "/bin/echo"}
 	libs = []string{"/lib/ld-musl-x86_64.so.1"}
 )
 
