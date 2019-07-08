@@ -195,7 +195,7 @@ func copyFile(src, dest string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(dest, data, 0777)
+	return ioutil.WriteFile(dest, data, 0755)
 }
 
 func (l *Linux) mountProcs() error {

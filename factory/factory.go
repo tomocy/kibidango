@@ -59,7 +59,7 @@ func load(id string) (*kibidango.Spec, error) {
 
 func createWorkspace(id string) error {
 	dir := workspace(id)
-	if err := os.MkdirAll(dir, 0777); err != nil {
+	if err := os.MkdirAll(dir, 0755); err != nil {
 		return err
 	}
 
@@ -78,7 +78,7 @@ func createSpecFile(id string) error {
 
 func save(spec *kibidango.Spec) error {
 	name := specFilename(spec.ID)
-	dest, err := os.OpenFile(name, os.O_WRONLY, 0777)
+	dest, err := os.OpenFile(name, os.O_WRONLY, 0755)
 	if err != nil {
 		return err
 	}

@@ -58,12 +58,12 @@ func (l *Linux) createWorkspace(id string) error {
 
 func (l *Linux) createPipeFile(id string) error {
 	name := pipeFilename(id)
-	return unix.Mkfifo(name, 0777)
+	return unix.Mkfifo(name, 0755)
 }
 
 func (l *Linux) tellPipeFD(kibi *kibidango.Linux) error {
 	name := pipeFilename(kibi.Spec().ID)
-	fd, err := unix.Open(name, unix.O_RDONLY|unix.O_NONBLOCK, 0777)
+	fd, err := unix.Open(name, unix.O_RDONLY|unix.O_NONBLOCK, 0755)
 	if err != nil {
 		return err
 	}

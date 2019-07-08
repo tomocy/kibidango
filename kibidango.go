@@ -85,7 +85,7 @@ func (k *kibidango) joinRoot(path string) string {
 
 func (k *kibidango) writePipe() error {
 	name := fmt.Sprintf("/proc/%s/fd/%d", k.pidOrSelf(), k.pipeFD)
-	pipe, err := os.OpenFile(name, os.O_WRONLY, 0777)
+	pipe, err := os.OpenFile(name, os.O_WRONLY, 0755)
 	if err != nil {
 		return err
 	}
