@@ -8,8 +8,6 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/tomocy/deverr"
-
 	errorPkg "github.com/tomocy/kibidango/error"
 )
 
@@ -262,5 +260,19 @@ func (l *Linux) waitToExec() <-chan error {
 }
 
 func (l *Linux) Exec() error {
-	return deverr.NotImplemented
+	if err := <-l.tellToExec(); err != nil {
+		return errorPkg.Report("exec", err)
+	}
+
+	return nil
+}
+
+func (l *Linux) tellToExec() <-chan error {
+	ch := make(chan error)
+	go func() {
+		defer close(ch)
+		ch <- l.writePipe()
+	}()
+
+	return ch
 }
