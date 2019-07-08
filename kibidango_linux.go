@@ -2,7 +2,6 @@ package kibidango
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -191,23 +190,12 @@ func (l *Linux) ensure(libs []string) error {
 }
 
 func copyFile(src, dest string) error {
-	input, err := os.Open(src)
+	data, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err
 	}
-	defer input.Close()
 
-	output, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY, 0777)
-	if err != nil {
-		return err
-	}
-	defer output.Close()
-
-	if _, err := io.Copy(output, input); err != nil {
-		return err
-	}
-
-	return nil
+	return ioutil.WriteFile(dest, data, 0777)
 }
 
 func (l *Linux) mountProcs() error {
