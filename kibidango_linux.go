@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	errorPkg "github.com/tomocy/kibidango/error"
+	"golang.org/x/sys/unix"
 )
 
 func ForLinux(spec *Spec) (*Linux, error) {
@@ -60,9 +61,9 @@ func (l *Linux) clone(args ...string) error {
 
 func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 	cmd := exec.Command("/proc/self/exe", args...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET | syscall.CLONE_NEWNS |
-			syscall.CLONE_NEWPID | syscall.CLONE_NEWUSER | syscall.CLONE_NEWUTS,
+	cmd.SysProcAttr = &unix.SysProcAttr{
+		Cloneflags: unix.CLONE_NEWIPC | unix.CLONE_NEWNET | unix.CLONE_NEWNS |
+			unix.CLONE_NEWPID | unix.CLONE_NEWUSER | unix.CLONE_NEWUTS,
 		UidMappings: []syscall.SysProcIDMap{
 			{
 				ContainerID: 0,
@@ -94,7 +95,7 @@ func (l *Linux) waitReadyToExec() <-chan error {
 }
 
 func (l *Linux) Init() error {
-	if err := syscall.Sethostname([]byte(l.id)); err != nil {
+	if err := unix.Sethostname([]byte(l.id)); err != nil {
 		return errorPkg.Report("init", err)
 	}
 	if err := l.limit(); err != nil {
@@ -113,7 +114,7 @@ func (l *Linux) Init() error {
 		return errorPkg.Report("init", err)
 	}
 
-	return syscall.Exec(l.process.Args[0], l.process.Args, os.Environ())
+	return unix.Exec(l.process.Args[0], l.process.Args, os.Environ())
 }
 
 var (
@@ -202,7 +203,7 @@ func (l *Linux) mountProcs() error {
 	if err := os.MkdirAll(l.joinRoot("/proc"), 0755); err != nil {
 		return err
 	}
-	if err := syscall.Mount("/proc", l.joinRoot("/proc"), "proc", syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV, ""); err != nil {
+	if err := unix.Mount("/proc", l.joinRoot("/proc"), "proc", unix.MS_NOEXEC|unix.MS_NOSUID|unix.MS_NODEV, ""); err != nil {
 		return err
 	}
 
@@ -213,16 +214,16 @@ func (l *Linux) pivotRoot() error {
 	if err := os.MkdirAll(l.joinRoot("/oldfs"), 0755); err != nil {
 		return err
 	}
-	if err := syscall.Mount(l.root, l.root, "", syscall.MS_BIND|syscall.MS_REC, ""); err != nil {
+	if err := unix.Mount(l.root, l.root, "", unix.MS_BIND|unix.MS_REC, ""); err != nil {
 		return err
 	}
-	if err := syscall.PivotRoot(l.root, l.joinRoot("/oldfs")); err != nil {
+	if err := unix.PivotRoot(l.root, l.joinRoot("/oldfs")); err != nil {
 		return err
 	}
-	if err := syscall.Chdir("/"); err != nil {
+	if err := unix.Chdir("/"); err != nil {
 		return err
 	}
-	if err := syscall.Unmount("/oldfs", syscall.MNT_DETACH); err != nil {
+	if err := unix.Unmount("/oldfs", unix.MNT_DETACH); err != nil {
 		return err
 	}
 	if err := os.RemoveAll("/oldfs"); err != nil {
