@@ -44,6 +44,7 @@ func (l *Linux) Run(args ...string) error {
 func (l *Linux) cloneAsyncly(args ...string) <-chan error {
 	ch := make(chan error)
 	go func() {
+		defer close(ch)
 		ch <- l.clone(args...)
 	}()
 
@@ -88,6 +89,7 @@ func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 func (l *Linux) waitReadyToExec() <-chan error {
 	ch := make(chan error)
 	go func() {
+		defer close(ch)
 		ch <- l.readPipe()
 	}()
 
@@ -247,6 +249,7 @@ func (l *Linux) pivotRoot() error {
 func (l *Linux) waitToExec() <-chan error {
 	ch := make(chan error)
 	go func() {
+		defer close(ch)
 		if err := l.writePipe(); err != nil {
 			ch <- err
 			return
