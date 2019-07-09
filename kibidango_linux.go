@@ -265,3 +265,12 @@ func (l *Linux) tellToExec() <-chan error {
 
 	return ch
 }
+
+func (l *Linux) Kill(sig os.Signal) error {
+	proc, err := os.FindProcess(l.process.ID)
+	if err != nil {
+		return err
+	}
+
+	return proc.Signal(sig)
+}
