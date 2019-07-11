@@ -30,7 +30,7 @@ func (l *Linux) Run(args ...string) error {
 	var err error
 	select {
 	case err = <-l.cloneAsyncly(args...):
-	case err = <-l.waitReadyToExec():
+	case err = <-l.waitReadyToExecAsyncly():
 	}
 	if err != nil {
 		return errorPkg.Report("run", err)
@@ -84,14 +84,18 @@ func (l *Linux) buildCloneCommand(args ...string) *exec.Cmd {
 	return cmd
 }
 
-func (l *Linux) waitReadyToExec() <-chan error {
+func (l *Linux) waitReadyToExecAsyncly() <-chan error {
 	ch := make(chan error)
 	go func() {
 		defer close(ch)
-		ch <- l.readPipe()
+		ch <- l.waitReadyToExec()
 	}()
 
 	return ch
+}
+
+func (l *Linux) waitReadyToExec() error {
+	return l.readPipe()
 }
 
 func (l *Linux) Init() error {
