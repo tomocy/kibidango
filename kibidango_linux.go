@@ -114,7 +114,7 @@ func (l *Linux) Init() error {
 	if err := l.pivotRoot(); err != nil {
 		return errorPkg.Report("init", err)
 	}
-	if err := <-l.waitToExec(); err != nil {
+	if err := l.waitToExec(); err != nil {
 		return errorPkg.Report("init", err)
 	}
 
@@ -237,19 +237,12 @@ func (l *Linux) pivotRoot() error {
 	return nil
 }
 
-func (l *Linux) waitToExec() <-chan error {
-	ch := make(chan error)
-	go func() {
-		defer close(ch)
-		if err := l.writePipe(); err != nil {
-			ch <- err
-			return
-		}
+func (l *Linux) waitToExec() error {
+	if err := l.writePipe(); err != nil {
+		return err
+	}
 
-		ch <- l.readPipe()
-	}()
-
-	return ch
+	return l.readPipe()
 }
 
 func (l *Linux) Exec() error {
