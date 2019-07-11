@@ -246,21 +246,15 @@ func (l *Linux) waitToExec() error {
 }
 
 func (l *Linux) Exec() error {
-	if err := <-l.tellToExec(); err != nil {
+	if err := l.tellToExec(); err != nil {
 		return errorPkg.Report("exec", err)
 	}
 
 	return nil
 }
 
-func (l *Linux) tellToExec() <-chan error {
-	ch := make(chan error)
-	go func() {
-		defer close(ch)
-		ch <- l.writePipe()
-	}()
-
-	return ch
+func (l *Linux) tellToExec() error {
+	return l.writePipe()
 }
 
 func (l *Linux) Kill(sig os.Signal) error {
