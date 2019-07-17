@@ -79,8 +79,9 @@ func (k *kibidango) UpdatePipeFD(fd int) error {
 	return nil
 }
 
-func (k *kibidango) joinRoot(path string) string {
-	return filepath.Join(k.root, path)
+func (k *kibidango) joinRoot(paths ...string) string {
+	ss := append([]string{k.root}, paths...)
+	return filepath.Join(ss...)
 }
 
 func (k *kibidango) writePipe() error {
